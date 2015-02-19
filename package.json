@@ -16,7 +16,8 @@
     "url": "https://github.com/creed30/cs4460Project/issues"
   },
   "homepage": "https://github.com/creed30/cs4460Project",
-  "dependencies": {
+  "dependencies": {   
+    "d3": "^3.5.5",
     "sqlite3": "^3.0.5"
   }
 }
