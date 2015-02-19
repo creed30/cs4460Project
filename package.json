@@ -1,0 +1,22 @@
+{
+  "name": "cs4460Project",
+  "version": "1.0.0",
+  "description": "CS4460 Tennis Project",
+  "main": "DBConnect.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/creed30/cs4460Project"
+  },
+  "author": "Chad Reed, Spencer Malone, Noel Vo, Quincy Robbins",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/creed30/cs4460Project/issues"
+  },
+  "homepage": "https://github.com/creed30/cs4460Project",
+  "dependencies": {
+    "sqlite3": "^3.0.5"
+  }
+}
