@@ -17,7 +17,9 @@
   },
   "homepage": "https://github.com/creed30/cs4460Project",
   "dependencies": {
+    "connect": "^3.3.4",
     "d3": "^3.5.5",
+    "serve-static": "^1.9.1",
     "sql.js": "^0.2.21",
     "sqlite3": "^3.0.5"
   }
