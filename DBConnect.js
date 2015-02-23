@@ -1,28 +1,31 @@
-// var sqlite3 = require('sqlite3').verbose();
-// var db = new sqlite3.Database('DB/ATPDB.db');
-// db.serialize(function() {
-// db.run("SELECT COUNT(*) FROM ATPDATA");
-// db.each("SELECT COUNT(*) as test FROM ATPDATA", function(err, row) { console.log(row.test) } );
-// });
-// db.close();
-var http = require('http');
-var fs = require('fs');
-var index = fs.readFileSync('index.html');
+var sql = window.SQL;
 
-http.createServer(function (req, res) {
-  res.writeHead(200, {'Content-Type': 'text/plain'});
-  res.end(index);
-}).listen(9615);
+// Initialize the db
+var xhr = new XMLHttpRequest();
+xhr.open('GET', '/DB/ATPDB.db', true);
+xhr.responseType = 'arraybuffer';
+var db = {};
+var uInt8Array = {};
 
-var fs = require('fs');
-var SQL = require('sql.js');
-var filebuffer = fs.readFileSync('./DB/ATPDB.db');
-var db = new SQL.Database(filebuffer);
+xhr.onload = function(e) {
+  uInt8Array = new Uint8Array(this.response);
+  db = new SQL.Database(uInt8Array);
+};
+xhr.send();
 
-// Load the db
+
+
 
 function selectCount(column) {
-	var contents = db.exec("SELECT COUNT("+ column +") FROM ATPDATA");
-	var test = contents[0].values[0][0];
-	return test;
+	var xhr = new XMLHttpRequest();
+	xhr.open('GET', '/DB/ATPDB.db', true);
+	xhr.responseType = 'arraybuffer';
+	xhr.onload = function(e) {
+	  var contents = db.exec("SELECT COUNT(*) FROM ATPDATA");
+	  console.log(contents);
+	  var test = contents[0].values[0][0];
+	  	// Set the document text to the return value
+		document.getElementById('demo').innerHTML = test;	
+	}
+	xhr.send();
 }
