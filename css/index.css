@@ -1,0 +1,48 @@
+#section3{
+	text-align: center;
+}
+
+#section3 .line {
+	stroke: rgb(247, 150, 29);
+	stroke-width: 2;
+	fill: none;
+}
+
+#section3 .line:hover {
+	stroke: rgb(0, 150, 29);
+	stroke-width: 10;
+	fill: none;
+}
+
+#section3 .axis {
+  shape-rendering: crispEdges;
+}
+
+#section3 .x.axis line {
+  stroke: rgba(88, 89, 93, .12);
+}
+
+#section3 .x.axis .minor {
+  stroke-opacity: .5;
+}
+
+#section3 .x.axis path {
+  display: none;
+}
+
+#section3 .y.axis line, .y.axis path {
+  fill: none;
+  stroke: rgba(88, 89, 93, .5);
+}
+
+#section3 .axis path,
+#section3 .axis line {
+  fill: none;
+  stroke: rgba(88, 89, 93, .3);
+  shape-rendering: crispEdges;
+}
+
+#section3 .axis text {
+  font: 10px sans-serif;
+  fill: rgba(88, 89, 93, .5);
+}
