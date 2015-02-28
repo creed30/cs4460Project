@@ -11,42 +11,60 @@ var hL = height / 5 ;
 
 var padding = 10;
 
-var chart = d3.select(".chart")
-    .attr("width", width)
-    .attr("height", height);
+// var chart = d3.select(".chart")
+//     .attr("width", width)
+//     .attr("height", height);
 
 // var x = document.getElementById("section3");
 // x.innerHTML = "Browser inner window width: " + width + ", height: " + height + ".";
 
 window.onresize = resize;
-var m = [80, 80, 80, 80]; 
-	var w = width - m[1] - m[3]; 
-	var h = height - m[0] - m[2]; 
-	
+var m = [80, 80, 80, 80];
+	var w = width - m[1] - m[3];
+	var h = height - m[0] - m[2];
+
 	var data= document.getElementById('demoWRank').innerHTML.split(",");
 	console.log(data);
+  var test = [];
+  var ranks = [];
+  var dates = [];
+	//var car = {type:"Fiat", model:500, color:"white"};
+	while(data.length>0){
+		var date = data.pop();
+		dates.push(new Date(date.substring(6,10),date.substring(0,2)-1,date.substring(3,5)));
+		ranks.push(data.pop());
+	}
+   // 	for (var i = 0; i < data.length; i+2) {
+	  //  ranks[i/2]=data[i];
+	//   dates[i/2]=data[i+1];
+	//  }
+	ranks = ranks.map(Number);
+	 console.log(dates);
+	// console.log(test[0][0]);
+ console.log(ranks);
 	function formatCurrency (d){
-  	return "$" + d; 
+  	return  d;
 	}
 
 	var xLabels = d3.time.scale().domain([new Date(2013, 0, 1), new Date(2013, 11, 31)]).range([0, w]);
-	var x = d3.scale.linear().domain([0, data.length]).range([0, w]);
-	var y = d3.scale.linear().domain([0, d3.max(data)]).range([h, 0]);
+	var x = d3.scale.linear().domain([0, ranks.length]).range([0, w]);
+	var y = d3.scale.linear().domain([d3.max(ranks), d3.min(ranks)]).range([h, 0]);
 
 	var line = d3.svg.line()
-		.x(function(d,i) { 
+		.x(function(d,i) {
 			console.log('Plotting X value for data point: ' + d + ' using index: ' + i + ' to be at: ' + x(i) + ' using our xScale.');
-			return x(i); 
+			return x(i);
 		})
-		.y(function(d) { 
+		.y(function(d) {
 			console.log('Plotting Y value for data point: ' + d + ' to be at: ' + y(d) + " using our yScale.");
-			return y(d); 
+			return y(d);
 		})
 
 	var graph = d3.select("#section3").append("svg:svg")
 	      .attr("width", w + m[1] + m[3])
 	      .attr("height", h + m[0] + m[2])
 	    .append("svg:g")
+
 	      .attr("transform", "translate(" + 120 + "," + m[0] + ")");
 
 	var xAxis = d3.svg.axis().scale(xLabels).ticks(d3.time.months).tickFormat(d3.time.format("%B")).tickSize(-h).tickSubdivide(true);
@@ -58,11 +76,11 @@ var m = [80, 80, 80, 80];
 	var yAxisLeft = d3.svg.axis().scale(y).ticks(7).tickFormat(formatCurrency).orient("left");
 	graph.append("svg:g")
 	      .attr("class", "y axis")
-	      .attr("transform", "translate(-25,0)")
+	      .attr("transform", "translate(0,-25)")
 	      .call(yAxisLeft);
 
 		graph.append("svg:path")
-			.attr("d", line(data))
+			.attr("d", line(ranks))
 			.attr('class', 'line');
 		}
 /*
@@ -71,28 +89,28 @@ var w = width,
     pad = 20,
     left_pad = 150,
     Data_url = '/data.json';
- 
+
 var svg = d3.select("#section3")
         .append("svg")
         .attr("width", w)
         .attr("height", h);
- 
+
 var x = d3.scale.linear().domain([0, 11]).range([left_pad, w-pad]),
     y = d3.scale.linear().domain([0,11]).range([pad, h-pad*2]);
-	
+
 var xAxis = d3.svg.axis().scale(x).orient("bottom"),
     yAxis = d3.svg.axis().scale(y).orient("left");
 svg.append("g")
     .attr("class", "axis")
     .attr("transform", "translate(0, "+(h-pad)+")")
     .call(xAxis);
- 
+
 svg.append("g")
     .attr("class", "axis")
     .attr("transform", "translate("+(left_pad-pad)+", 0)")
     .call(yAxis);
-	
-*/	
+
+*/
 //Create the SVG Viewport
 // var svgContainer = d3.select("body").append("svg")
 //                                      .attr("width", width)

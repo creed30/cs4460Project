@@ -30,12 +30,12 @@ function selectCount(column) {
 	xhr.send();
 }
 
-function selectWRank(player) {
+function selectWRank(player,date) {
 	var xhr = new XMLHttpRequest();
 	xhr.open('GET', '/DB/ATPDB.db', true);
 	xhr.responseType = 'arraybuffer';
 	xhr.onload = function(e) {
-	  var contents = db.exec("SELECT Wrank FROM ATPDATA WHERE Winner='"+player+"'");
+	  var contents = db.exec("SELECT Wrank,date FROM ATPDATA WHERE Winner='"+player+"' AND Date LIKE '%%%%%%"+date+"'");
 	  console.log(contents);
 	  var test = contents[0].values;
 	  	// Set the document text to the return value
