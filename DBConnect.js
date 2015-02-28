@@ -25,7 +25,7 @@ function selectCount(column) {
 	  console.log(contents);
 	  var test = contents[0].values[0][0];
 	  	// Set the document text to the return value
-		document.getElementById('demo').innerHTML = test;	
+		document.getElementById('demo').innerHTML = test;
 	}
 	xhr.send();
 }
@@ -35,11 +35,11 @@ function selectWRank(player,date) {
 	xhr.open('GET', '/DB/ATPDB.db', true);
 	xhr.responseType = 'arraybuffer';
 	xhr.onload = function(e) {
-	  var contents = db.exec("SELECT Wrank,date FROM ATPDATA WHERE Winner='"+player+"' AND Date LIKE '%%%%%%"+date+"'");
+	  var contents = db.exec("SELECT DISTINCT Wrank,date FROM ATPDATA WHERE Winner='"+player+"' AND Date LIKE '%%%%%%"+date+"'");
 	  console.log(contents);
 	  var test = contents[0].values;
 	  	// Set the document text to the return value
-		document.getElementById('demoWRank').innerHTML = test;	
+		document.getElementById('demoWRank').innerHTML = test;
 	}
 	xhr.send();
 }
@@ -53,7 +53,7 @@ function selectLRank(player) {
 	  console.log(contents);
 	  var test = contents[0].values;
 	  	// Set the document text to the return value
-		document.getElementById('demoLRank').innerHTML = test;	
+		document.getElementById('demoLRank').innerHTML = test;
 	}
 	xhr.send();
 }
@@ -67,7 +67,7 @@ function selectWLRank(player) {
 	  console.log(contents);
 	  var test = contents[0].values;
 	  	// Set the document text to the return value
-		document.getElementById('demoWLRank').innerHTML = test;	
+		document.getElementById('demoWLRank').innerHTML = test;
 	}
 	xhr.send();
 }

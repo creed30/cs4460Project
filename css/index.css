@@ -1,3 +1,15 @@
+line {
+  stroke: black;
+}
+
+path {
+    fill: none;
+    stroke: green;
+}
+
+div.invis {     /* this will hide div with class div_class_name */
+  display:none;
+}
 #section3{
 	text-align: center;
 }
@@ -43,6 +55,6 @@
 }
 
 #section3 .axis text {
-  font: 10px sans-serif;
+  font: 8px sans-serif;
   fill: rgba(88, 89, 93, .5);
 }
