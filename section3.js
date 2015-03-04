@@ -33,7 +33,7 @@ var m = [80, 80, 80, 80];
 	while(data.length>0){
 		var date = data.pop();
 		var rank = parseInt(data.pop());
-		objArr[objArr.length] = {date1:new Date(date.substring(6,10),date.substring(0,2)-1,date.substring(3,5)), rank:rank};
+		objArr[objArr.length] = {date:new Date(date.substring(6,10),date.substring(0,2)-1,date.substring(3,5)), rank:rank};
 		console.log(objArr[objArr.length-1]);
 		//dates.push(new Date(date.substring(6,10),date.substring(0,2)-1,date.substring(3,5)));
 		//ranks.push(data.pop());
@@ -41,14 +41,14 @@ var m = [80, 80, 80, 80];
 	ranks = ranks.map(Number);
 	var byDate = objArr.slice(0);
 	byDate.sort(function(a,b) {
-    return a.date1 - b.date1;
+    return a.date - b.date;
 	});
 	var byRank = objArr.slice(0);
 	byRank.sort(function(a,b) {
 		return a.rank - b.rank;
 	});
-console.log('by date:');
-console.log(byRank[0].rank);
+// console.log('by date:');
+// console.log(byRank[0].rank);
 ranks = [];
 dates = [];
 // while(objArr.length>0){
@@ -59,18 +59,136 @@ dates = [];
 // ranks.reverse();
 // dates.reverse();
 
-	 console.log(dates);
+	//  console.log(dates);
 	// console.log(test[0][0]);
  console.log(ranks);
 // var test = [objArr];
-console.log(objArr[0].date1);
+// console.log(objArr[0].date);
 objArr.reverse();
-var test = [byDate];
+var minRank = byRank[0].rank,
+		maxRank = byRank[byRank.length-1].rank;
 
+// var test = [byDate];
+var test = byDate;
+
+// var test2 = test[0];
+
+
+
+var margin = {top: 10, right: 10, bottom: 100, left: 40},
+    margin2 = {top: 430, right: 10, bottom: 20, left: 40},
+    width = 960 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom,
+    height2 = 500 - margin2.top - margin2.bottom;
+
+var parseDate = d3.time.format("%b %Y").parse;
+
+var x = d3.time.scale().range([0, width]),
+    x2 = d3.time.scale().range([0, width]),
+    y = d3.scale.linear().range([0, height]),
+    y2 = d3.scale.linear().range([0, height2]);
+
+var xAxis = d3.svg.axis().scale(x).orient("bottom"),
+    xAxis2 = d3.svg.axis().scale(x2).orient("bottom"),
+    yAxis = d3.svg.axis().scale(y).orient("left"),
+		yAxis2 = d3.svg.axis().scale(y2).orient("left");
+
+var brush = d3.svg.brush()
+    .x(x2)
+    .on("brush", brushed);
+
+// var area = d3.svg.area()
+//     .interpolate("monotone")
+//     .x(function(d) { return x(d.date); })
+//     .y0(height)
+//     .y1(function(d) { return y(d.rank); });
+
+var area2 = d3.svg.area()
+    .interpolate("monotone")
+    .x(function(d) { return x2(d.date); })
+    .y0(height2)
+    .y1(function(d) { return y2(d.rank); });
+
+var svg = d3.select("body").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom);
+
+svg.append("defs").append("clipPath")
+    .attr("id", "clip")
+  .append("rect")
+    .attr("width", width)
+    .attr("height", height);
+
+// var focus = svg.append("g")
+//     .attr("class", "focus")
+//     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+var context = svg.append("g")
+    .attr("class", "context")
+    .attr("transform", "translate(" + margin2.left + "," + margin2.top + ")");
+
+d3.csv("sp500.csv", type, function(error, data) {
+  x.domain(d3.extent(test.map(function(d) { return d.date; })));
+  y.domain([1, d3.max(test.map(function(d) { return d.rank; }))]);
+  x2.domain(x.domain());
+  y2.domain(y.domain());
+
+  // focus.append("path")
+  //     .datum(test2)
+  //     // .attr("class", "area")
+  //     .attr("d", area);
+
+  // focus.append("g")
+  //     .attr("class", "x axis")
+  //     .attr("transform", "translate(0," + height + ")")
+  //     .call(xAxis);
+
+  // focus.append("g")
+  //     .attr("class", "y axis")
+  //     .call(yAxis);
+
+  context.append("g")
+		  .attr("class", "y axis")
+		  .call(yAxis2);
+
+  context.append("path")
+      .datum(test)
+      // .attr("class", "area")
+      .attr("d", area2);
+
+  context.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height2 + ")")
+      .call(xAxis2);
+
+  context.append("g")
+      .attr("class", "x brush")
+      .call(brush)
+    .selectAll("rect")
+      .attr("y", -6)
+      .attr("height", height2 + 7);
+});
+
+function brushed() {
+  x.domain(brush.empty() ? x2.domain() : brush.extent());
+  focus.select(".area").attr("d", area);
+  focus.select(".x.axis").call(xAxis);
+}
+
+function type(d) {
+  d.date = parseDate(d.date);
+  d.rank = +d.rank;
+  return d;
+}
+
+}
 
 // get max and min dates - this assumes data is sorted
-var minDate = objArr[0].date1,
-		maxDate = objArr[objArr.length-1].date1;
+
+//good example
+/*
+var minDate = objArr[0].date,
+		maxDate = objArr[objArr.length-1].date;
 
 
 var p = 30,
@@ -120,7 +238,7 @@ rules.append("svg:text")
 vis.append("svg:path")
 .attr("class", "line")
 .attr("d", d3.svg.line()
-		.x(function(d) { return x(d.date1) })
+		.x(function(d) { return x(d.date) })
 		.y(function(d) { return y(d.rank) })
 );
 
@@ -128,13 +246,19 @@ vis.selectAll("circle.line")
 .data(data)
 .enter().append("svg:circle")
 .attr("class", "line")
-.attr("cx", function(d) { return x(d.date1) })
+.attr("cx", function(d) { return x(d.date) })
 .attr("cy", function(d) { return y(d.rank); })
 .attr("r", 3.5);
 
-
-
 }
+
+
+*/
+
+
+
+
+
 /*
 
 	function formatCurrency (d){
