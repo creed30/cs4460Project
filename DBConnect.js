@@ -93,7 +93,7 @@ function selectPlayers() {
 	xhr.open('GET', '/DB/ATPDB.db', true);
 	xhr.responseType = 'arraybuffer';
 	xhr.onload = function(e) {
-	  var contents = db.exec("SELECT DISTINCT Loser FROM ATPDATA UNION SELECT DISTINCT Winner FROM ATPDATA");
+	  var contents = db.exec("SELECT Loser FROM ATPDATA UNION SELECT Winner FROM ATPDATA");
 	  console.log(contents);
 	  var test = contents[0].values;
 	  	// Set the document text to the return value
