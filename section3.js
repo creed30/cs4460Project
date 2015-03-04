@@ -76,25 +76,25 @@ var test = byDate;
 
 
 var margin = {top: 10, right: 10, bottom: 100, left: 40},
-    margin2 = {top: 430, right: 10, bottom: 20, left: 40},
+    // margin2 = {top: 430, right: 10, bottom: 20, left: 40},
     width = 960 - margin.left - margin.right,
-    height = 500 - margin.top - margin.bottom,
-    height2 = 500 - margin2.top - margin2.bottom;
+    height = 500 - margin.top - margin.bottom;
+    // height2 = 500 - margin2.top - margin2.bottom;
 
 var parseDate = d3.time.format("%b %Y").parse;
 
 var x = d3.time.scale().range([0, width]),
-    x2 = d3.time.scale().range([0, width]),
-    y = d3.scale.linear().range([0, height]),
-    y2 = d3.scale.linear().range([0, height2]);
+    // x2 = d3.time.scale().range([0, width]),
+    y = d3.scale.linear().range([0, height]);
+    // y2 = d3.scale.linear().range([0, height]);
 
 var xAxis = d3.svg.axis().scale(x).orient("bottom"),
-    xAxis2 = d3.svg.axis().scale(x2).orient("bottom"),
-    yAxis = d3.svg.axis().scale(y).orient("left"),
-		yAxis2 = d3.svg.axis().scale(y2).orient("left");
+    // xAxis2 = d3.svg.axis().scale(x2).orient("bottom"),
+    yAxis = d3.svg.axis().scale(y).orient("left");
+		// yAxis2 = d3.svg.axis().scale(y2).orient("left");
 
 var brush = d3.svg.brush()
-    .x(x2)
+    .x(x)
     .on("brush", brushed);
 
 // var area = d3.svg.area()
@@ -105,9 +105,9 @@ var brush = d3.svg.brush()
 
 var area2 = d3.svg.area()
     .interpolate("monotone")
-    .x(function(d) { return x2(d.date); })
-    .y0(height2)
-    .y1(function(d) { return y2(d.rank); });
+    .x(function(d) { return x(d.date); })
+    .y0(height)
+    .y1(function(d) { return y(d.rank); });
 
 var svg = d3.select("body").append("svg")
     .attr("width", width + margin.left + margin.right)
@@ -125,13 +125,13 @@ svg.append("defs").append("clipPath")
 
 var context = svg.append("g")
     .attr("class", "context")
-    .attr("transform", "translate(" + margin2.left + "," + margin2.top + ")");
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-d3.csv("sp500.csv", type, function(error, data) {
+d3.csv("", type, function(error, data) {
   x.domain(d3.extent(test.map(function(d) { return d.date; })));
   y.domain([1, d3.max(test.map(function(d) { return d.rank; }))]);
-  x2.domain(x.domain());
-  y2.domain(y.domain());
+  // x2.domain(x.domain());
+  // y2.domain(y.domain());
 
   // focus.append("path")
   //     .datum(test2)
@@ -149,7 +149,7 @@ d3.csv("sp500.csv", type, function(error, data) {
 
   context.append("g")
 		  .attr("class", "y axis")
-		  .call(yAxis2);
+		  .call(yAxis);
 
   context.append("path")
       .datum(test)
@@ -158,19 +158,19 @@ d3.csv("sp500.csv", type, function(error, data) {
 
   context.append("g")
       .attr("class", "x axis")
-      .attr("transform", "translate(0," + height2 + ")")
-      .call(xAxis2);
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis);
 
   context.append("g")
       .attr("class", "x brush")
       .call(brush)
     .selectAll("rect")
       .attr("y", -6)
-      .attr("height", height2 + 7);
+      .attr("height", height + 7);
 });
 
 function brushed() {
-  x.domain(brush.empty() ? x2.domain() : brush.extent());
+  x.domain(brush.empty() ? x.domain() : brush.extent());
   focus.select(".area").attr("d", area);
   focus.select(".x.axis").call(xAxis);
 }

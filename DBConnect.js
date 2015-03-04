@@ -71,3 +71,35 @@ function selectWLRank(player) {
 	}
 	xhr.send();
 }
+
+// function selectPlayers(year) {
+// 	var xhr = new XMLHttpRequest();
+// 	xhr.open('GET', '/DB/ATPDB.db', true);
+// 	xhr.responseType = 'arraybuffer';
+// 	xhr.onload = function(e) {
+// 	  var contents = db.exec("SELECT DISTINCT Loser FROM ATPDATA WHERE Date LIKE '%%%%%%"+year.value+"' UNION ALL SELECT DISTINCT Winner FROM ATPDATA WHERE Date LIKE '%%%%%%"+year.value+"'");
+// 	  console.log(contents);
+// 	  var test = contents[0].values;
+// 	  	// Set the document text to the return value
+// 		// alert(typeOf test);
+//     document.getElementById('players').innerHTML = test;
+//
+// 	}
+// 	xhr.send();
+//   // fillPlayer();
+// }
+function selectPlayers() {
+	var xhr = new XMLHttpRequest();
+	xhr.open('GET', '/DB/ATPDB.db', true);
+	xhr.responseType = 'arraybuffer';
+	xhr.onload = function(e) {
+	  var contents = db.exec("SELECT DISTINCT Loser FROM ATPDATA UNION SELECT DISTINCT Winner FROM ATPDATA");
+	  console.log(contents);
+	  var test = contents[0].values;
+	  	// Set the document text to the return value
+		// alert(typeOf test);
+    document.getElementById('players').innerHTML = test;
+	}
+	xhr.send();
+  // fillPlayer();
+}

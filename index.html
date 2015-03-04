@@ -3,18 +3,33 @@
 <script src="node_modules/sql.js/js/sql.js"></script>
 <script src="node_modules/d3/d3.js"></script>
 <script type="text/javascript" src="DBConnect.js"></script>
+<script type="text/javascript" src="section1.js"></script>
+
+<!-- <element onload="section1"> -->
+
+<select id="selectYear" onChange="fillPlayers();">
+    <option>SelectYear</option>
+</select>
+
+<select id="selectPlayer">
+    <option>SelectPlayer</option>
+</select>
 
 <button type="button"
 onclick="selectWRank('Federer R.',2010);">
 Click me to display selectWRank</button>
+<button type="button"
+onclick="selectPlayers(2010);">
+Click me to display selectPlayers</button>
 <button type="button"
 onclick="go()">
 Click me to display Graph</button>
 <button type="button"
 onclick="selectWLRank('Dosedel S.')">
 Click me to display selectWLRank</button>
-<body></body>
+<body onload="loadYear();selectPlayers();" ></body>
 <div class="invis"><p id="demoWRank"></p></div>
+<div class="invis"><p id="players"></p></div>
 <p id="demoWRankDates"></p>
 <p id="demoLRank"></p>
 <p id="demoWLRank"></p>

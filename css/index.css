@@ -32,10 +32,10 @@ path {
     fill: none;
     stroke: green;
 }
-
-div.invis {     /* this will hide div with class div_class_name */
+/*
+div.invis {   //hides div class
   display:none;
-}
+}*/
 #section3{
 	text-align: center;
 }
