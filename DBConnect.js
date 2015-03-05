@@ -97,6 +97,8 @@ function selectPlayers() {
       selectBox.appendChild(option);
       // console.print("chees");
     }
+      document.body.removeAttribute( "hidden");
+
 	  	// Set the document text to the return value
 		// alert(typeOf test);
     // document.getElementById('players').innerHTML = test;
