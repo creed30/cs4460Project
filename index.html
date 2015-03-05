@@ -7,7 +7,7 @@
 
 <!-- <element onload="section1"> -->
 
-<select id="selectYear" onChange="fillPlayers();">
+<select id="selectYear" onChange="selectPlayers();">
     <option>SelectYear</option>
 </select>
 
@@ -27,7 +27,8 @@ Click me to display Graph</button>
 <button type="button"
 onclick="selectWLRank('Dosedel S.')">
 Click me to display selectWLRank</button>
-<body onload="loadYear();selectPlayers();" ></body>
+<!-- <body onload="loadYear();selectPlayers();" ></body> -->
+<!-- <body onload="init();" ></body> -->
 <div class="invis"><p id="demoWRank"></p></div>
 <div class="invis"><p id="players"></p></div>
 <p id="demoWRankDates"></p>

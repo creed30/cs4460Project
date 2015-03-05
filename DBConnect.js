@@ -1,3 +1,4 @@
+var sql, xhr, db, uInt8Array;
 var sql = window.SQL;
 
 // Initialize the db
@@ -10,9 +11,25 @@ var uInt8Array = {};
 xhr.onload = function(e) {
   uInt8Array = new Uint8Array(this.response);
   db = new SQL.Database(uInt8Array);
+  loadYear();
+  selectPlayers();
 };
 xhr.send();
 
+// function init() {
+//   sql = window.SQL;
+//   xhr = new XMLHttpRequest();
+//   xhr.open('GET', '/DB/ATPDB.db', true);
+//   xhr.responseType = 'arraybuffer';
+//   db = {};
+//   uInt8Array = {};
+//   xhr.onload = function(e) {
+//     uInt8Array = new Uint8Array(this.response);
+//     db = new SQL.Database(uInt8Array);
+//   };
+//   xhr.send();
+//   selectPlayers();
+// }
 
 
 
@@ -66,9 +83,21 @@ function selectWLRank(player) {
 // }
 function selectPlayers() {
 	  var contents = db.exec("SELECT Loser FROM ATPDATA UNION SELECT Winner FROM ATPDATA");
-	  console.log(contents);
-	  var test = contents[0].values;
+    var selectBox = document.getElementById('selectPlayer');
+	  console.log(contents[0].values);
+	  var players = contents[0].values.reverse();
+    while(players.length > 0) {
+      // create option element
+      var option = document.createElement('option');
+      // add value and text name
+      var temp = players.pop();
+      option.value = temp;
+      option.innerHTML = temp;
+      // add the option element to the selectbox
+      selectBox.appendChild(option);
+      // console.print("chees");
+    }
 	  	// Set the document text to the return value
 		// alert(typeOf test);
-    document.getElementById('players').innerHTML = test;
+    // document.getElementById('players').innerHTML = test;
 }
