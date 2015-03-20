@@ -8,7 +8,10 @@
         <script type="text/javascript" src="d3/d3.js"></script>
         <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
         <script type="text/javascript" src="LoadValues.js"></script>
-        <style>
+        <script type="text/javascript" src="section3csv.js"></script>
+        <link rel="stylesheet" type="text/css" href="/css/index.css" media="screen" />
+
+        <!-- /*<style>
         .axis path,
         .axis line {
             fill: none;
@@ -60,7 +63,7 @@
               font: 10px sans-serif;
               text-anchor: middle;
             }
-        </style>
+        </style>*/ -->
 
 
     </head>
@@ -72,7 +75,7 @@
           <option>SelectYear</option>
       </select>
 
-      <select id="selectPlayer">
+      <select id="selectPlayer" onChange="section3()">
           <option id="0">SelectPlayer</option>
       </select>
         <!-- <svg class="chart"></svg> -->
@@ -80,12 +83,7 @@
 
           var datawoo = [];
 
-          function uniq(a) {
-              var seen = {};
-              return a.filter(function(item) {
-                  return seen.hasOwnProperty(item) ? false : (seen[item] = true);
-              });
-          }
+
 
 
 
@@ -313,4 +311,6 @@
 //             .call(yAxis);
         </script>
     </body>
+    <section3>
+    </section3>
 </html>
