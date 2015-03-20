@@ -12,6 +12,7 @@ function loadYear() {
     selectBox.appendChild(option);
   }
 }
+
 function fillPlayers() {
   // selectPlayers(year.value);
   // get selectbox
