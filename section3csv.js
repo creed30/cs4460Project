@@ -1,5 +1,6 @@
 function section3() {
-
+  d3.select("svg")
+       .remove();
   var m = [80, 80, 80, 80];
   var w = width - m[1] - m[3];
   var h = (height - m[0] - m[2])/3;

@@ -21,7 +21,9 @@ function loadYear() {
 function loadPlayers() {
 	var year = document.getElementById('selectYear');
 	var yearInput = year.value;
-	year.remove(0);
+  try{
+  year.remove(year.options.namedItem("SelectYear").id);
+  } catch(err){}
   var players = document.getElementById('selectPlayer');
 	while (players.options.length > 0) {
 	   players.options.remove(0);
