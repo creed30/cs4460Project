@@ -1,5 +1,5 @@
 function section3() {
-  d3.select("svg")
+  d3.select("section3 > svg")
        .remove();
   var m = [80, 80, 80, 80];
   var w = width - m[1] - m[3];
