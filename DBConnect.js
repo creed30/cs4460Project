@@ -82,10 +82,10 @@ function selectWLRank(player) {
 //   // fillPlayer();
 // }
 function selectPlayers() {
-	  var contents = db.exec("SELECT Loser FROM ATPDATA UNION SELECT Winner FROM ATPDATA");
+    var contents = db.exec("SELECT Loser FROM ATPDATA UNION SELECT Winner FROM ATPDATA");
     var selectBox = document.getElementById('selectPlayer');
-	  console.log(contents[0].values);
-	  var players = contents[0].values.reverse();
+    console.log(contents[0].values);
+    var players = contents[0].values.reverse();
     while(players.length > 0) {
       // create option element
       var option = document.createElement('option');
@@ -97,7 +97,7 @@ function selectPlayers() {
       selectBox.appendChild(option);
       // console.print("chees");
     }
-      document.body.removeAttribute( "hidden");
+    document.body.removeAttribute( "hidden");
 
 	  	// Set the document text to the return value
 		// alert(typeOf test);
