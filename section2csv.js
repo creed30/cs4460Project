@@ -7,7 +7,7 @@ function section2() {
 
   var margin = {top: 10, right: 100, bottom: 100, left: 100},
       width = window.innerWidth - margin.left - margin.right,
-      height = 600 - margin.top - margin.bottom;
+      height = window.innerHeight/2 - margin.top - margin.bottom;
 
   // var parseDate = d3.time.format("%b %Y").parse;
 
@@ -22,6 +22,7 @@ function section2() {
 
   var context = svg.append("g")
       .attr("class", "context")
+      // .attr("x", 500)
 
 var year = document.getElementById('selectYear').value;
 var player = document.getElementById('selectPlayer').value;
@@ -115,7 +116,7 @@ var player = document.getElementById('selectPlayer').value;
         }
         tournament = {
           start:ret[0],
-          end:ret[0],
+          end:addDays(ret[0],7),
           name:ret[5],
           games:[game]
         }
@@ -134,10 +135,24 @@ var player = document.getElementById('selectPlayer').value;
   // to get a value that is either negative, positive, or zero.
       return a[0] - b[0];
       });
-
+              temp = context.selectAll("g")
+              .data(tournaments)
+              .enter()
+              .append("text")
+              .attr("x",margin.left)
+              .attr("y",(function(d,i) {return i* 20 + 10;}))
+              .on("mouseover", function(d){
+                  d3.select(".brush").call(brush.extent([new Date(d['start']),new Date(d['end'])]))
+              })
+              // .attr("x",(function(d,i) {return i*30;}))
+              .text(function(d){return d.name})
                node = context.selectAll("g")
               .data(tournaments)
               .enter()
+              // .append("text")
+              // .attr("y",(function(d,i) {return i* 20 + 20;}))
+              // .attr("x",(function(d,i) {return i*30;}))
+              // .text(function(d){return d.name})
               .append('g')
               // .attr("y",(function(d,i) {return i*5;}))
               // .append("text")
@@ -146,20 +161,34 @@ var player = document.getElementById('selectPlayer').value;
               // // .attr("x",(function(d,i) {return i*30;}))
               // .attr("y",(function(d,i) {return i* 20 + 20;}))
               // // .append('text')
-              .text(function(d){return "<div>" +d.name+ "<div>"})
+              // .text(function(d){return "<div>" +d.name+ "<div>"})
 
               .on("mouseover", function(d){
                   d3.select(".brush").call(brush.extent([new Date(d['start']),new Date(d['end'])]))
               })
+
+              // .append("rect")
+              // .attr("y",(function(d,i) {return i* 20 + 20;}))
+              // .attr("x",60)
+              // .text(function(d){return d.name})
+              // .append("text")
+              // .text(function(d){return d.name})
+              // .enter()
               .append('svg')
-              .attr('height',12)
-              .attr('width',width)
-              .attr("x",100)
+              // .append('rect')
+              // .attr('height',12)
+              // .attr('width',80)
+              // // .attr('x',function(d,i){return i*82})
+              // .attr('style',function(d){
+              //       return "fill:rgb(0,0,0)"
+              //   })
+
+
               // .attr("y",(function(d,i) {return i* 20;}))
               // .append("text")
               // .attr('height',12)
               // .attr('width',width)
-              // .attr("x",(function(d,i) {return i*30;}))
+              .attr("x",200 + margin.right)
               .attr("y",(function(d,i) {return i* 20;}))
               // .text(function(d){return d.name})
 
@@ -249,6 +278,10 @@ var player = document.getElementById('selectPlayer').value;
 // });
 
 
+}
+
+function addDays(dateObj, numDays) {
+  return dateObj.setDate(dateObj.getDate() + numDays);
 }
 
 function parseDate(dat) {
