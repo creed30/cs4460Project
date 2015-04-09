@@ -136,21 +136,42 @@ var player = document.getElementById('selectPlayer').value;
               .data(tournaments)
               .enter()
               .append('div')
+              .text(function(d){return d.name})
+
               .on("mouseover", function(d){
                   d3.select(".brush").call(brush.extent([new Date(d['start']),new Date(d['end'])]))
               })
-              .append('tournament')
-              .text(function(d){
-                ret = d.name + "         ";
-                return ret;
-              });
-
-              game = node.selectAll("div").data(function(d){return d['games']}).enter().append('rounds')
               .append('svg')
               .attr('height',12)
-              .attr('width',80)
+              .attr('width',width)
 
-              roundsvg = game.selectAll('rounds svg').data(function(d,i){return d['rounds']}).enter().append('rect')
+              // .append('tournament')
+              // .text(function(d){
+              //   ret = d.name + "         ";
+              //   return ret;
+              // });
+
+              game = node.selectAll("svg").data(function(d){return d['games']}).enter()
+              .append('g')
+              .attr("transform", function(d,i){ return "translate(" + i*82 + "," + 0 + ")"})
+              // .append('rect')
+              // .attr('height',12)
+              // .attr('width',80)
+              // .attr('x',function(d,i){return i*82})
+              // .attr('style',function(d){
+              //       return "fill:rgb(0,0,0)"
+              //   })
+
+              test = game.append('rect')
+              .attr('height',12)
+              .attr('width',80)
+              // .attr('x',function(d,i){return i*82})
+              .attr('style',function(d){
+                    return "fill:rgb(0,0,0)"
+                })
+
+
+              roundsvg = game.selectAll('g').data(function(d,i){return d['rounds']}).enter().append('rect')
                 .attr("height", 12)
                 .attr("width", 12)
                 .attr('x',function(d,i){return i*14})
@@ -161,13 +182,13 @@ var player = document.getElementById('selectPlayer').value;
                     return "fill:rgb(255,0,0)"
                 })
 
-              game.selectAll('rounds svg').data(function(d,i){return d['rounds']}).enter().append('text')
-              .attr('x',function(d,i){return i*14 + 3})
-              .attr('y',11)
-              .attr("font-family", "sans-serif")
-              .attr("font-size", "12px")
-              .attr("fill", "black")
-              .text(function(d){return d['wins']});
+              // game.selectAll('svg rect').data(function(d,i){return d['rounds']}).enter().append('text')
+              // .attr('x',function(d,i){return i*14 + 3})
+              // .attr('y',11)
+              // .attr("font-family", "sans-serif")
+              // .attr("font-size", "12px")
+              // .attr("fill", "black")
+              // .text(function(d){return d['wins']});
 
 
 
