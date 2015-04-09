@@ -1,5 +1,7 @@
+var brush;
+
 function section3() {
-  d3.select("svg")
+  d3.select("section3 > svg")
        .remove();
   var m = [80, 80, 80, 80];
   var w = width - m[1] - m[3];
@@ -17,7 +19,7 @@ function section3() {
   var xAxis = d3.svg.axis().scale(x).orient("bottom"),
       yAxis = d3.svg.axis().scale(y).orient("left");
 
-  var brush = d3.svg.brush()
+  brush = d3.svg.brush()
       .x(x)
       .on("brush", brushed);
 
