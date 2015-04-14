@@ -1,178 +1,124 @@
-/* 
- * Original code from https://gist.github.com/enjalot/1203641
- * Edited by: Noel Vo
+/**
+ * Created by PhucNoel
+ *
+ * Source: http://bl.ocks.org/mbostock/1305111
  */
-var sql, xhr, db, uInt8Array;
-var sql = window.SQL;
-
-// Initialize the db
-var xhr = new XMLHttpRequest();
-xhr.open('GET', '/DB/ATPDB.db', true);
-xhr.responseType = 'arraybuffer';
-var db = {};
-var uInt8Array = {};
-
-xhr.onload = function(e) {
-  uInt8Array = new Uint8Array(this.response);
-  db = new SQL.Database(uInt8Array);
-  loadYears();
-  loadPlayers();
-};
-xhr.send();
-
-function loadYears() {
-  var selectBox = document.getElementById('years');
-  for (var i = 2014; i >= 2000; i--) {
-    var option = document.createElement('option');
-    option.value = i;
-    option.innerHTML = i;
-    selectBox.appendChild(option);
-  }
+var color = {
+    'HARD': '#6d9bff',
+    'GRASS': '#00FF00',
+    'CLAY': '#FF4000'
 }
 
-function loadPlayers() {
-  var query = "SELECT Loser FROM ATPDATA UNION SELECT Winner FROM ATPDATA";
-  var contents = db.exec(query);
-  var selectBox = document.getElementById('players');
-  var players = contents[0].values.reverse();
-  while(players.length > 100) {
-    var option = document.createElement('option');
-    var temp = players.pop();
-    option.value = temp;
-    option.innerHTML = temp;
-    selectBox.appendChild(option);
-  }
+function section1() {
+    var player = document.getElementById('selectPlayer').value;
+    var year = document.getElementById('selectYear').value;
+    getStats(player, year);
 }
 
-// Global values of selected year and player
-var selectedYear, selectedPlayer;
-
-// Set selectedYear variable when users select a year
-function setYear() {
-  var element = document.getElementById('years');
-  selectedYear = element.options[element.selectedIndex].text;
-}
-
-// Set selectedPlayer variable when users select a player
-function setPlayer() {
-  var element = document.getElementById('players');
-  selectedPlayer = element.options[element.selectedIndex].text;
-}
-
-/*
- * Compute the statistic of a player
- * @return: object with this format
- *          {
- *            totalGames: 123,
- *            win: 123,
- *            lose: 123,
- *            winPercentage: 123.12,
- *            losePercentage: 123.12
- *          }
+/**
+ * Display donuts charts.
+ *
+ * @param data
+ *          Define the data as a two-dimensional array of numbers. If you had other
+ *          data to associate with each number, replace each number with an object, e.g.,
+ *          `{key: "value"}`.
  */
-function getPlayerStats(player, year, surface) {
-  var stats = {};
-  
-  // Query total games
-  var query  = "SELECT count(*) as totalGames ";
-      query += "  FROM atpdata ";
-      query += " WHERE (Winner = :winner ";
-      query += "        OR Loser = :loser) ";
-      query += "   AND Surface = :surface ";
-  
-  // Bind query parameters
-  var stmt = db.prepare(query);
-  var result = stmt.getAsObject({
-                  ':winner' : player,
-                  ':loser' : player,
-                  ':surface' : surface
-              });
-  
-  stats['totalGames'] = result['totalGames'];
-  
-  // Query win games
-  query  = "SELECT count(*) as win ";
-  query += "  FROM atpdata ";
-  query += " WHERE Winner = :winner ";
-  query += "   AND Surface = :surface ";
-  
-  stmt = db.prepare(query);
-  result = stmt.getAsObject({
-              ':winner' : player,
-              ':surface' : surface
-            });
-  
-  stats['win'] = result['win'];
-  
-  // Query lost games
-  query  = "SELECT count(*) as lose ";
-  query += "  FROM atpdata ";
-  query += " WHERE Loser = :loser ";
-  query += "   AND Surface = :surface ";
-  
-  stmt = db.prepare(query);
-  result = stmt.getAsObject({
-              ':loser' : player,
-              ':surface' : surface
-            });
-  
-  stats['lose'] = result['lose'];
-  
-  // Prepare returned object
-  stats['winPercentage'] = parseFloat((stats['win'] / stats['totalGames'] * 100).toFixed(2));
-  stats['losePercentage'] = parseFloat((100 - stats['winPercentage']).toFixed(2));
-  stats['surface'] = surface;
-  stats['player'] = player;
-  stats['year'] = year;
+function showCharts(data) {
+    // Erase previous charts
+    $("section1").empty();
 
-  return stats;
+    // Get total game
+    var totalGames = data[0][0] + data[0][1];
+    console.log(data);
+    // Define the margin, radius, and color scale. The color scale will be
+    // assigned by index, but if you define your data using objects, you could pass
+    // in a named field from the data object instead, such as `d.name`. Colors
+    // are assigned lazily, so if you want deterministic behavior, define a domain
+    // for the color scale.
+    var m = 10,
+        r = 100,
+        z = d3.scale.category20c();
+
+    // Define arc layout
+    var arc = d3.svg.arc()
+        .innerRadius(r / 2)
+        .outerRadius(r);
+
+    // Insert an svg:svg element (with margin) for each row in our dataset. A
+    // child svg:g element translates the origin to the pie center.
+    var svg = d3.select("section1").selectAll("svg")
+        .data(data)
+        .enter().append("svg:svg")
+        .attr("width", (r + m) * 2)
+        .attr("height", (r + m) * 2)
+        .append("svg:g")
+        .attr("transform", "translate(" + (r + m) + "," + (r + m) + ")");
+
+    // The data for each svg:svg element is a row of numbers (an array). We pass
+    // that to d3.layout.pie to compute the angles for each arc. These start and end
+    // angles are passed to d3.svg.arc to draw arcs! Note that the arc radius is
+    // specified on the arc, not the layout.
+    var cnt = -1;
+    svg.selectAll("path")
+        .data(d3.layout.pie())
+        .enter().append("svg:g")
+        .attr("class", "arc")
+        .append("svg:path")
+        .attr("d", arc)
+        .style("fill", function (d, i) {
+            cnt++;
+            if (cnt == 0) {
+                return color.GRASS;
+            } else if (cnt == 2) {
+                return color.HARD;
+            } else if (cnt == 4) {
+                return color.CLAY;
+            } else {
+                return "#ffffff";
+            }
+        })
+        .append("svg:title")
+        .text(function(d, i) {
+            if (i == 0) {
+                return "Win Games: " + d.value;
+            } else {
+                return "Lose Games: " + d.value;
+            }
+
+        });
+
+    svg.append("svg:text")
+        .attr("dy", ".35em")
+        .attr("text-anchor", "middle")
+        .text(function(d, i) {
+            if (i == 0) { return "GRASS" }
+            if (i == 1) { return "HARD" }
+            if (i == 2) { return "CLAY" }
+        });
+
+    // Add text into the charts
+    svg.selectAll(".arc")
+        .append("text")
+        .attr("text-anchor", "middle")
+        .attr("transform", function (d) {
+            return "translate(" + arc.centroid(d) + ")";
+        })
+        .text(function (d) {
+            return calculatePercentage(d.data, totalGames);
+        });
 }
 
-function displayPieChart(stats) {
-  var w = 200, h = 300, r = 100;
-  var color = d3.scale.category10();
-  var data = [{"label": stats['winPercentage'] + "%", "value": stats['winPercentage']}, 
-              {"label": stats['losePercentage'] + "%", "value": stats['losePercentage']}];
+function getStats(player, year) {
+    var params = {
+        'player': player,
+        'year': year
+    };
 
-  var vis = d3.select("#hard")
-              .append("svg:svg")
-              .data([data])
-              .attr("width", w)
-              .attr("height", h)
-              .append("svg:g")
-              .attr("transform", "translate(" + r + "," + r + ")");
-
-  var arc = d3.svg.arc()
-              .outerRadius(r);
-
-  var pie = d3.layout.pie().value(function (d) { return d.value; });
-  var arcs = vis.selectAll("g.slice")
-              .data(pie)
-              .enter()
-              .append("svg:g")
-              .attr("class", "slice");
-
-  arcs.append("svg:path")
-      .attr("fill", function (d, i) { 
-        return color(i);
-      })
-      .attr("d", arc);
-
-  arcs.append("svg:text")
-      .attr("transform", function (d) {
-        d.innerRadius = 0;
-        d.outerRadius = r;
-        return "translate(" + arc.centroid(d) + ")";
-      })
-      .attr("text-anchor", "middle")
-      .text(function (d, i) { return data[i].label; });
+    $.get("http://localhost:3000/getStats", params, function (data) {
+        showCharts(data);
+    });
 }
 
-function showCharts() {
-  var hardSurfaceStats = getPlayerStats(selectedPlayer, selectedYear, 'Hard');
-  var claySurfaceStats = getPlayerStats(selectedPlayer, selectedYear, 'Clay');
-  var grassSurfaceStats = getPlayerStats(selectedPlayer, selectedYear, 'Grass');
-  displayPieChart(hardSurfaceStats);
-  displayPieChart(claySurfaceStats);
-  displayPieChart(grassSurfaceStats);
+function calculatePercentage(winGames, totalGames) {
+    return (winGames/totalGames*100).toFixed(2)  + "%";
 }
