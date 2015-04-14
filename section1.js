@@ -58,7 +58,7 @@ function showCharts(data) {
   // specified on the arc, not the layout.
   var cnt = -1;
   svg.selectAll("path")
-      .data(d3.layout.pie())
+      .data(d3.layout.pie().sort(null).startAngle(2*Math.PI).endAngle(0))
       .enter().append("svg:g")
       .attr("class", "arc")
       .append("svg:path")
