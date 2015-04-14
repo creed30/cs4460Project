@@ -35,7 +35,7 @@ function showCharts(data) {
   // are assigned lazily, so if you want deterministic behavior, define a domain
   // for the color scale.
   var m = 10,
-      r = 100;
+      r = 50;
 
   // Define arc layout
   var arc = d3.svg.arc()
@@ -44,11 +44,18 @@ function showCharts(data) {
 
   // Insert an svg:svg element (with margin) for each row in our dataset. A
   // child svg:g element translates the origin to the pie center.
-  var svg = d3.select("section1").selectAll("svg")
+  var svg = d3.select("section1").append("svg")
+      .attr("width", 1000)
+      .attr("heigth", 200)
+      .attr("x", 500)
+      .selectAll("svg")
       .data(data)
       .enter().append("svg:svg")
       .attr("width", (r + m) * 2)
       .attr("height", (r + m) * 2)
+      .attr("x", function (d, i) {
+          return 600 + i*120;
+      })
       .append("svg:g")
       .attr("transform", "translate(" + (r + m) + "," + (r + m) + ")");
 
