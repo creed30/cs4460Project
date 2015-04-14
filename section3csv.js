@@ -1,4 +1,7 @@
 var brush;
+var brushGraph;
+// var x;
+var svg;
 
 function section3() {
   d3.select("section3 > svg")
@@ -13,8 +16,8 @@ function section3() {
 
   // var parseDate = d3.time.format("%b %Y").parse;
 
-  var x = d3.time.scale().range([0, width]),
-      y = d3.scale.linear().range([0, height]);
+   x = d3.time.scale().range([0, width]);
+  var y = d3.scale.linear().range([0, height]);
 
   var xAxis = d3.svg.axis().scale(x).orient("bottom"),
       yAxis = d3.svg.axis().scale(y).orient("left");
@@ -22,6 +25,9 @@ function section3() {
   brush = d3.svg.brush()
       .x(x)
       .on("brush", brushed);
+  brushGraph = d3.svg.brush()
+          .x(x)
+          .on("brush", brushed);
 
 
 var year = document.getElementById('selectYear').value;
@@ -37,7 +43,7 @@ var player = document.getElementById('selectPlayer').value;
       .y0(height)
       .y1(function(d) { return y(d[2]); });
 
-  var svg = d3.select("section3").append("svg")
+  svg = d3.select("section3").append("svg")
       .attr("width", width + margin.left + margin.right)
       .attr("height", height + margin.top + margin.bottom);
 
@@ -143,10 +149,45 @@ var player = document.getElementById('selectPlayer').value;
 
 }
 function brushed() {
-  x.domain(brush.empty() ? x.domain() : brush.extent());
-  focus.select(".area").attr("d", area);
-  focus.select(".x.axis").call(xAxis);
+  // svg.selectAll("rect");
+  var e = brush.extent();
+    section2context.selectAll('.section2brushrect').remove();
+  svg.selectAll("rect").classed("hidden", function(d) {
+    section2Brush(e[0],e[1])
+      // return e[0] > d[p.x] || d[p.x] > e[1]
+      //     || e[0] > d[p.y] || d[p.y] > e[1];
+    });
+  // console.log(e);
+  // x.domain(brush.empty() ? x.domain() : brush.extent());
+  // focus.select(".area").attr("d", area);
+  // console.log(area);
+  // focus.select(".x.axis").call(xAxis);
 }
 function parseDate(dat) {
   return Date(dat.substring(6,10),dat.substring(0,2)-1,dat.substring(3,5));
+}
+
+function section2Brush(startDate,endDate){
+section2context.selectAll('.section2context')
+    .data(tournaments)
+              .enter()
+          .insert("rect",":first-child")
+                    .attr("class", "section2brushrect")
+
+                            .attr('height',20)
+                                          .attr("y",(function(d,i) {return i* 20 + 10;}))
+              .attr('width',500)
+              // .attr('x',function(d,i){return i*82})
+              .attr('style',function(d){
+                console.log(d)
+                if(d.start.getTime() > startDate.getTime() && d.start.getTime() < endDate.getTime() ){
+                    return "fill:rgb(0,0,255)"
+                }
+                else if(d.end > startDate.getTime() && d.end < endDate.getTime() )
+                {
+                    return "fill:rgb(0,255,255)"
+                }
+                else
+                  this.remove();
+                })
 }
