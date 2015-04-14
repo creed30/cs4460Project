@@ -151,9 +151,9 @@ var player = document.getElementById('selectPlayer').value;
 function brushed() {
   // svg.selectAll("rect");
   var e = brush.extent();
+    section2context.selectAll('.section2brushrect').remove();
   svg.selectAll("rect").classed("hidden", function(d) {
-    console.log(e[0]);
-    console.log(e[1]);
+    section2Brush(e[0],e[1])
       // return e[0] > d[p.x] || d[p.x] > e[1]
       //     || e[0] > d[p.y] || d[p.y] > e[1];
     });
@@ -165,4 +165,29 @@ function brushed() {
 }
 function parseDate(dat) {
   return Date(dat.substring(6,10),dat.substring(0,2)-1,dat.substring(3,5));
+}
+
+function section2Brush(startDate,endDate){
+section2context.selectAll('.section2context')
+    .data(tournaments)
+              .enter()
+          .insert("rect",":first-child")
+                    .attr("class", "section2brushrect")
+
+                            .attr('height',20)
+                                          .attr("y",(function(d,i) {return i* 20 + 10;}))
+              .attr('width',500)
+              // .attr('x',function(d,i){return i*82})
+              .attr('style',function(d){
+                console.log(d)
+                if(d.start.getTime() > startDate.getTime() && d.start.getTime() < endDate.getTime() ){
+                    return "fill:rgb(0,0,255)"
+                }
+                else if(d.end > startDate.getTime() && d.end < endDate.getTime() )
+                {
+                    return "fill:rgb(0,255,255)"
+                }
+                else
+                  this.remove();
+                })
 }

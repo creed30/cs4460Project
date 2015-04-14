@@ -1,3 +1,5 @@
+var tournaments = [];
+var section2context = {};
 function section2() {
   d3.select("section2 > svg")
        .remove();
@@ -21,15 +23,15 @@ function section2() {
     .attr("height", height + margin.top + margin.bottom);
 
   var context = svg.append("g")
-      .attr("class", "context")
+      .attr("class", "section2context")
       // .attr("x", 500)
-
+      section2context = context
 var year = document.getElementById('selectYear').value;
 var player = document.getElementById('selectPlayer').value;
 
   var dataset = []
   d3.csv("ATPDATA/ATP"+year+".csv", function(data) {
-          var tournaments = [];
+
           var maxGames = 0;
      dataset = data.map(function(d)
      {
@@ -124,7 +126,9 @@ var player = document.getElementById('selectPlayer').value;
           maxGames = tournament['games'].length
         tournaments.push(tournament)
        }
-
+       height = (tournaments.length * 20) + 10
+       d3.select("section2 > svg")
+      .attr("height", height );
       // console.log(tournaments);
       // console.log(maxGames)
 
@@ -142,6 +146,8 @@ var player = document.getElementById('selectPlayer').value;
               .attr("x",margin.left)
               .attr("y",(function(d,i) {return i* 20 + 10;}))
               .on("mouseover", function(d){
+                    section2context.selectAll('.section2brushrect').remove();
+
                   d3.select(".brush").call(brush.extent([new Date(d['start']),new Date(d['end'])]))
               })
               // .attr("x",(function(d,i) {return i*30;}))
@@ -164,6 +170,8 @@ var player = document.getElementById('selectPlayer').value;
               // .text(function(d){return "<div>" +d.name+ "<div>"})
 
               .on("mouseover", function(d){
+                    section2context.selectAll('.section2brushrect').remove();
+
                   d3.select(".brush").call(brush.extent([new Date(d['start']),new Date(d['end'])]))
               })
 
@@ -287,3 +295,5 @@ function addDays(dateObj, numDays) {
 function parseDate(dat) {
   return Date(dat.substring(6,10),dat.substring(0,2)-1,dat.substring(3,5));
 }
+
+
