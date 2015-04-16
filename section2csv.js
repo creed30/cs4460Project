@@ -117,8 +117,9 @@ var player = document.getElementById('selectPlayer').value;
           rank:ret[2]
         }
         tournament = {
-          start:ret[0],
-          end:addDays(ret[0],7),
+          start:new Date(ret[0]),
+          // end:addDays(ret[0],1),
+          end:new Date(ret[0]),
           name:ret[5],
           games:[game]
         }
@@ -148,7 +149,7 @@ var player = document.getElementById('selectPlayer').value;
               .on("mouseover", function(d){
                     section2context.selectAll('.section2brushrect').remove();
 
-                  d3.select(".brush").call(brush.extent([new Date(d['start']),new Date(d['end'])]))
+                  d3.select(".brush").call(brush.extent([addDays(d['start'],1),d['end']]))
               })
               // .attr("x",(function(d,i) {return i*30;}))
               .text(function(d){return d.name})
@@ -295,5 +296,3 @@ function addDays(dateObj, numDays) {
 function parseDate(dat) {
   return Date(dat.substring(6,10),dat.substring(0,2)-1,dat.substring(3,5));
 }
-
-
