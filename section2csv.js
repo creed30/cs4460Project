@@ -149,8 +149,19 @@ var player = document.getElementById('selectPlayer').value;
               .append("text")
               .attr("x",margin.left)
               .attr("y",(function(d,i) {return i* 20 + 10;}))
-              .on("mouseover", function(d){
+              .on("mouseover", function(d,i){
+                    var recty = i*20
                     section2context.selectAll('.section2brushrect').remove();
+                    section2context
+                    .insert("rect",":first-child")
+                    .attr("class", "section2brushrect")
+                    .attr('height',15)
+                    .attr("y",(function() {return recty;}))
+                    .attr('width',width)
+                    .attr('x',margin.left)
+                    .attr('style',function(){
+                     return "fill:rgb(221,221,221)"
+                    })
 
                   d3.select(".brush").call(brush.extent([d['start'],d['end']]))
               })
@@ -173,8 +184,23 @@ var player = document.getElementById('selectPlayer').value;
               // // .append('text')
               // .text(function(d){return "<div>" +d.name+ "<div>"})
 
-              .on("mouseover", function(d){
+              .on("mouseover", function(d,i){
                     section2context.selectAll('.section2brushrect').remove();
+
+
+                    var recty = i*20
+                    section2context.selectAll('.section2brushrect').remove();
+                    section2context
+                    .insert("rect",":first-child")
+                    .attr("class", "section2brushrect")
+                    .attr('height',15)
+                    .attr("y",(function() {return recty;}))
+                    .attr('width',width)
+                    .attr('x',margin.left)
+                    .attr('style',function(){
+                      return "fill:rgb(221,221,221)"
+                    })
+
 
                   d3.select(".brush").call(brush.extent([new Date(d['start']),new Date(d['end'])]))
               })

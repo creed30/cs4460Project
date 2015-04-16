@@ -173,20 +173,19 @@ section2context.selectAll('.section2context')
               .enter()
           .insert("rect",":first-child")
                     .attr("class", "section2brushrect")
-
                             .attr('height',15)
                                           .attr("y",(function(d,i) {return i* 20;}))
               .attr('width',width)
               .attr('x',margin.left)
+
               // .attr('x',function(d,i){return i*82})
               .attr('style',function(d){
-                console.log(d)
                 if(d.start.getTime() > startDate.getTime() && d.start.getTime() < endDate.getTime() ){
-                    return "fill:rgb(0,100,255)"
+                    return "fill:rgb(221,221,221)"
                 }
                 else if(d.end > startDate.getTime() && d.end < endDate.getTime() )
                 {
-                    return "fill:rgb(0,255,255)"
+                    return "fill:rgb(221,221,221)"
                 }
                 else
                   this.remove();
