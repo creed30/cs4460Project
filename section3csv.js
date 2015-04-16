@@ -68,7 +68,7 @@ var player = document.getElementById('selectPlayer').value;
 
       var area2 = d3.svg.area()
           .interpolate("monotone")
-          .x(function(d) { return x(d[0]); })
+          .x(function(d) { return x(addDays(d[0],-1)); })
           .y0(height)
           .y1(function(d) { return y(d[2]); });
 
@@ -86,7 +86,8 @@ var player = document.getElementById('selectPlayer').value;
           .attr("class", "context")
           .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    x.domain(d3.extent(dataset.map(function(d) {console.log(d[0]); return addDays(d[0],2); })));
+    // x.domain(d3.extent(dataset.map(function(d) {console.log(d[0]); return d[0]; })));
+    x.domain([d3.min(dataset.map(function(d) { return addDays(d[0],-1); })),d3.max(dataset.map(function(d) { return addDays(d[0],2); }))])
     y.domain([1, d3.max(dataset.map(function(d) { return d[2]; }))]);
            context.append("g")
          		  .attr("class", "y axis")

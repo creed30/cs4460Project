@@ -123,6 +123,8 @@ var player = document.getElementById('selectPlayer').value;
           name:ret[5],
           games:[game]
         }
+
+        tournament['end'] = addDays(tournament['end'],-1);
         if(maxGames < tournament['games'].length)
           maxGames = tournament['games'].length
         tournaments.push(tournament)
@@ -149,7 +151,7 @@ var player = document.getElementById('selectPlayer').value;
               .on("mouseover", function(d){
                     section2context.selectAll('.section2brushrect').remove();
 
-                  d3.select(".brush").call(brush.extent([addDays(d['start'],1),d['end']]))
+                  d3.select(".brush").call(brush.extent([d['start'],d['end']]))
               })
               // .attr("x",(function(d,i) {return i*30;}))
               .text(function(d){return d.name})
