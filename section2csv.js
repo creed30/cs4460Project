@@ -1,6 +1,7 @@
 var tournaments = [];
 var section2context = {};
 function section2() {
+  tournaments = [];
   d3.select("section2 > svg")
        .remove();
   var m = [80, 80, 80, 80];
