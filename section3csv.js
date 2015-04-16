@@ -2,7 +2,9 @@ var brush;
 var brushGraph;
 // var x;
 var svg;
-
+var margin = {top: 10, right: 100, bottom: 100, left: 100},
+    width = window.innerWidth - margin.left - margin.right,
+    height = 200 - margin.top - margin.bottom;
 function section3() {
   d3.select("section3 > svg")
        .remove();
@@ -10,9 +12,9 @@ function section3() {
   var w = width - m[1] - m[3];
   var h = (height - m[0] - m[2])/3;
 
-  var margin = {top: 10, right: 100, bottom: 100, left: 100},
-      width = window.innerWidth - margin.left - margin.right,
-      height = 200 - margin.top - margin.bottom;
+  // var margin = {top: 10, right: 100, bottom: 100, left: 100},
+  //     width = window.innerWidth - margin.left - margin.right,
+  //     height = 200 - margin.top - margin.bottom;
 
   // var parseDate = d3.time.format("%b %Y").parse;
 
@@ -34,29 +36,6 @@ var year = document.getElementById('selectYear').value;
 var player = document.getElementById('selectPlayer').value;
 
 // window.onresize = resize;
-
-
-
-  var area2 = d3.svg.area()
-      .interpolate("monotone")
-      .x(function(d) { return x(d[0]); })
-      .y0(height)
-      .y1(function(d) { return y(d[2]); });
-
-  svg = d3.select("section3").append("svg")
-      .attr("width", width + margin.left + margin.right)
-      .attr("height", height + margin.top + margin.bottom);
-
-  svg.append("defs").append("clipPath")
-      .attr("id", "clip")
-      .append("rect")
-      .attr("width", width)
-      .attr("height", height);
-
-  var context = svg.append("g")
-      .attr("class", "context")
-      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
 
   var dataset = []
   d3.csv("ATPDATA/ATP"+year+".csv", function(data) {
@@ -87,7 +66,27 @@ var player = document.getElementById('selectPlayer').value;
       return a[0] - b[0];
       });
 
-    x.domain(d3.extent(dataset.map(function(d) { return d[0]; })));
+      var area2 = d3.svg.area()
+          .interpolate("monotone")
+          .x(function(d) { return x(d[0]); })
+          .y0(height)
+          .y1(function(d) { return y(d[2]); });
+
+      svg = d3.select("section3").append("svg")
+          .attr("width", width + margin.left + margin.right)
+          .attr("height", height + margin.top + margin.bottom);
+
+      svg.append("defs").append("clipPath")
+          .attr("id", "clip")
+          .append("rect")
+          .attr("width", width)
+          .attr("height", height);
+
+      var context = svg.append("g")
+          .attr("class", "context")
+          .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    x.domain(d3.extent(dataset.map(function(d) {console.log(d[0]); return d[0]; })));
     y.domain([1, d3.max(dataset.map(function(d) { return d[2]; }))]);
            context.append("g")
          		  .attr("class", "y axis")
@@ -174,14 +173,15 @@ section2context.selectAll('.section2context')
           .insert("rect",":first-child")
                     .attr("class", "section2brushrect")
 
-                            .attr('height',20)
-                                          .attr("y",(function(d,i) {return i* 20 + 10;}))
-              .attr('width',500)
+                            .attr('height',15)
+                                          .attr("y",(function(d,i) {return i* 20;}))
+              .attr('width',width)
+              .attr('x',margin.left)
               // .attr('x',function(d,i){return i*82})
               .attr('style',function(d){
                 console.log(d)
                 if(d.start.getTime() > startDate.getTime() && d.start.getTime() < endDate.getTime() ){
-                    return "fill:rgb(0,0,255)"
+                    return "fill:rgb(0,100,255)"
                 }
                 else if(d.end > startDate.getTime() && d.end < endDate.getTime() )
                 {
@@ -190,4 +190,7 @@ section2context.selectAll('.section2context')
                 else
                   this.remove();
                 })
+}
+function addDays(dateObj, numDays) {
+  return dateObj.setDate(dateObj.getDate() + numDays);
 }
