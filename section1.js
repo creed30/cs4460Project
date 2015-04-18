@@ -78,6 +78,7 @@ function showCharts(data) {
       .append("svg:title")
       .text(function(d, i) {
         if (i == 0) {
+          console.log(d);
           return "Win Games: " + d.value;
         } else {
           return "Lose Games: " + d.value;
@@ -117,6 +118,7 @@ function getStats(player, year) {
   });
 }
 
-function calculatePercentage(winGames, totalGames) {
+function calculatePercentage(winGames, loseGames) {
+  var totalGames = winGames + loseGames;
   return (winGames/totalGames*100).toFixed(2)  + "%";
 }

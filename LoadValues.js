@@ -15,9 +15,6 @@ function loadYear() {
   }
 }
 
-
-
-
 function loadPlayers() {
 	var year = document.getElementById('selectYear');
 	var yearInput = year.value;
