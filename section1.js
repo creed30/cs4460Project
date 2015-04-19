@@ -6,7 +6,8 @@
 var color = {
   'HARD': '#6d9bff',
   'GRASS': '#00FF00',
-  'CLAY': '#FF4000'
+  'CLAY': '#FF4000',
+  'WHITE': '#FFFFFF'
 }
 
 function section1() {
@@ -28,14 +29,17 @@ function showCharts(data) {
   $("section1").empty();
 
   // Get total game
-  var totalGames = data[0][0] + data[0][1];
+  var totalGrassGames = data[0][0] + data[0][1];
+  var totalHardGames = data[1][0] + data[1][1];
+  var totalClayGames = data[2][0] + data[2][1];
+
   // Define the margin, radius, and color scale. The color scale will be
   // assigned by index, but if you define your data using objects, you could pass
   // in a named field from the data object instead, such as `d.name`. Colors
   // are assigned lazily, so if you want deterministic behavior, define a domain
   // for the color scale.
   var m = 10,
-      r = 100;
+      r = 50;
 
   // Define arc layout
   var arc = d3.svg.arc()
@@ -44,11 +48,19 @@ function showCharts(data) {
 
   // Insert an svg:svg element (with margin) for each row in our dataset. A
   // child svg:g element translates the origin to the pie center.
-  var svg = d3.select("section1").selectAll("svg")
+  var svg = d3.select("section1").append("svg")
+      .attr("width", 1000)
+      .attr("heigth", 200)
+      .attr("x", 500)
+      .selectAll("svg")
       .data(data)
       .enter().append("svg:svg")
+      .attr("class", "piechart")
       .attr("width", (r + m) * 2)
       .attr("height", (r + m) * 2)
+      .attr("x", function (d, i) {
+          return 400 + i*120;
+      })
       .append("svg:g")
       .attr("transform", "translate(" + (r + m) + "," + (r + m) + ")");
 
@@ -58,10 +70,11 @@ function showCharts(data) {
   // specified on the arc, not the layout.
   var cnt = -1;
   svg.selectAll("path")
-      .data(d3.layout.pie())
+      .data(d3.layout.pie().sort(null).startAngle(2*Math.PI).endAngle(0))
       .enter().append("svg:g")
       .attr("class", "arc")
       .append("svg:path")
+      .attr("class", "piechart-part")
       .attr("d", arc)
       .style("fill", function (d, i) {
         cnt++;
@@ -72,13 +85,12 @@ function showCharts(data) {
         } else if (cnt == 4) {
           return color.CLAY;
         } else {
-          return "#ffffff";
+          return color.WHITE;
         }
       })
       .append("svg:title")
       .text(function(d, i) {
         if (i == 0) {
-          console.log(d);
           return "Win Games: " + d.value;
         } else {
           return "Lose Games: " + d.value;
@@ -86,24 +98,73 @@ function showCharts(data) {
 
       });
 
+  d3.selectAll(".piechart-part")
+    .on("mouseover", function (d, i) {
+      var mouse = d3.mouse(svg.node()).map( function(d) { return parseInt(d); } );
+      this.setAttribute("class", "arc-mouseover");
+    })
+    .on("mouseout",  function(d, i) {
+      this.removeAttribute("class", "arc-mouseover");
+    });
+
   svg.append("svg:text")
       .attr("dy", ".35em")
       .attr("text-anchor", "middle")
+      .attr("class", "surface")
       .text(function(d, i) {
-        if (i == 0) { return "GRASS" }
-        if (i == 1) { return "HARD" }
-        if (i == 2) { return "CLAY" }
+        if (i == 0) {
+          if (totalGrassGames == 0) {
+            return "Not Playing Grass";
+          }
+          return "GRASS";
+        }
+
+        if (i == 1) {
+          if (totalHardGames == 0) {
+            return "Not Playing Hard";
+          }
+          return "HARD";
+        }
+
+        if (i == 2) {
+          if (totalClayGames == 0) {
+            return "Not Playing Clay";
+          }
+          return "CLAY";
+        }
       });
 
   // Add text into the charts
+  cnt = 0;
   svg.selectAll(".arc")
       .append("text")
       .attr("text-anchor", "middle")
       .attr("transform", function (d) {
         return "translate(" + arc.centroid(d) + ")";
       })
-      .text(function (d) {
-        return calculatePercentage(d.data, totalGames);
+      .text(function (d, i) {
+        var totalGames = 0;
+        if (cnt < 2) {
+          totalGames = totalGrassGames;
+        } else if (cnt < 4) {
+          totalGames = totalHardGames;
+        } else {
+          totalGames = totalClayGames;
+        }
+        cnt++;
+        if (i == 1 && totalGames != 0 && d.data == totalGames) {
+          return "0% Win";
+        }
+
+        if (i == 1) {
+          return "";
+        }
+
+        if (totalGames == 0) {
+          return "";
+        } else {
+          return calculatePercentage(d.data, totalGames);
+        }
       });
 }
 
@@ -118,7 +179,6 @@ function getStats(player, year) {
   });
 }
 
-function calculatePercentage(winGames, loseGames) {
-  var totalGames = winGames + loseGames;
-  return (winGames/totalGames*100).toFixed(2)  + "%";
+function calculatePercentage(games, totalGames) {
+  return (games/totalGames*100).toFixed(2)  + "%";
 }

@@ -20,19 +20,14 @@ svg {
   shape-rendering: crispEdges;
 }
 
-
-
-
-
 line {
   stroke: black;
 }
 
-path {
+/*path {
     fill: none;
     stroke: green;
-}
-
+}*/
 div.invis {   //hides div class
   display:none;
 }
@@ -83,4 +78,22 @@ div.invis {   //hides div class
 #section3 .axis text {
   font: 8px sans-serif;
   fill: rgba(88, 89, 93, .5);
+}
+
+.area {
+  stroke: green;
+}
+
+#selection {
+  position: absolute;
+  top: 50px;
+  left: 100px;
+}
+
+section1 .surface {
+  font-weight: bold;
+}
+
+section1 .mouseover {
+  fill: "#aaaaaa";
 }
