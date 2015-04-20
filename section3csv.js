@@ -191,7 +191,7 @@ section2context.selectAll('.section2context')
           .insert("rect",":first-child")
                     .attr("class", "section2brushrect")
                             .attr('height',15)
-                                          .attr("y",(function(d,i) {return i* 20;}))
+                                          .attr("y",(function(d,i) {return i* 20 + 20;}))
               .attr('width',width)
               .attr('x',margin.left)
 
