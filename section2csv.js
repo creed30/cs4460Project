@@ -1,3 +1,41 @@
+var section1data = [];
+section1data[0] = []
+section1data[1] = []
+section1data[2] = []
+
+section1data[0][0] = 0;
+section1data[0][1] = 0;
+section1data[1][0] = 0;
+section1data[1][1] = 0;
+section1data[2][0] = 0;
+section1data[2][1] = 0;
+function incrementSurfaceCount(won,surface){
+  switch(surface){
+    case 'Grass':
+      if(won == 'Winner')
+        section1data[0][0]++;
+      else
+        section1data[0][1]++;
+
+      break;
+    case 'Hard':
+        if(won == 'Winner')
+        section1data[1][0]++;
+      else
+        section1data[1][1]++;
+      break;
+    case 'Clay':
+        if(won == 'Winner')
+        section1data[2][0]++;
+      else
+        section1data[2][1]++;
+      break;
+    default:
+      console.log("Something broke!!!")
+      break;
+  }
+}
+
 var tournaments = [];
 var section2context = {};
 function section2() {
@@ -84,12 +122,14 @@ var player = document.getElementById('selectPlayer').value;
             if(winnerScore > loserScore){
               won = false;
             }
+
             var round = {length:length,victor:won,wins:loserScore}
             ret[4].push(round);
           }
         }
 
-        // return ret;
+
+
       } else {
         return null;
       }
@@ -97,6 +137,7 @@ var player = document.getElementById('selectPlayer').value;
         exists = false;
         tournaments.forEach(function(tournament){
           if(tournament['name'] == ret[5]){
+
             exists = true;
             game = {
              rounds:ret[4],
@@ -104,6 +145,8 @@ var player = document.getElementById('selectPlayer').value;
              rank:ret[2],
              date:ret[0]
             }
+            incrementSurfaceCount(ret[3],d['Surface'])
+
             tournament['games'].push(game)
             tournament['end'] = ret[0]
            if(maxGames < tournament['games'].length)
@@ -117,6 +160,9 @@ var player = document.getElementById('selectPlayer').value;
           status:ret[3],
           rank:ret[2]
         }
+
+          incrementSurfaceCount(ret[3],d['Surface'])
+
         tournament = {
           start:new Date(ret[0]),
           // end:addDays(ret[0],1),
@@ -133,10 +179,11 @@ var player = document.getElementById('selectPlayer').value;
        height = (tournaments.length * 20) + 10
        d3.select("section2 > svg")
       .attr("height", height );
-      // console.log(tournaments);
-      // console.log(maxGames)
+
 
      });
+      showCharts(section1data);
+
      dataset = dataset.filter(function(n){ return n != undefined });
      dataset.sort(function(a,b){
   // Turn your strings into dates, and then subtract them
@@ -267,53 +314,8 @@ var player = document.getElementById('selectPlayer').value;
                     return "fill:rgb(255,0,0)"
                 })
 
-              // game.selectAll('svg rect').data(function(d,i){return d['rounds']}).enter().append('text')
-              // .attr('x',function(d,i){return i*14 + 3})
-              // .attr('y',11)
-              // .attr("font-family", "sans-serif")
-              // .attr("font-size", "12px")
-              // .attr("fill", "black")
-              // .text(function(d){return d['wins']});
-
-
-
-
-    //  console.log(dataset.filter(function(n){ return n != undefined }));
-     // console.dir(tournaments);
    });
 
-
-//
-// // var focus = svg.append("g")
-// //     .attr("class", "focus")
-// //     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-// var context = svg.append("g")
-//     .attr("class", "context")
-//     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-//
-// d3.csv("", type, function(error, data) {
-//   x.domain(d3.extent(test.map(function(d) { return d.date; })));
-//   y.domain([1, d3.max(test.map(function(d) { return d.rank; }))]);
-//   // x2.domain(x.domain());
-//   // y2.domain(y.domain());
-//
-//   // focus.append("path")
-//   //     .datum(test2)
-//   //     // .attr("class", "area")
-//   //     .attr("d", area);
-//
-//   // focus.append("g")
-//   //     .attr("class", "x axis")
-//   //     .attr("transform", "translate(0," + height + ")")
-//   //     .call(xAxis);
-//
-//   // focus.append("g")
-//   //     .attr("class", "y axis")
-//   //     .call(yAxis);
-//
-
-// });
 
 
 }

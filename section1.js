@@ -174,9 +174,9 @@ function getStats(player, year) {
     'year': year
   };
 
-  $.get("http://localhost:9615/getStats", params, function (data) {
-    showCharts(data);
-  });
+  // $.get("http://localhost:9615/getStats", params, function (data) {
+  //   showCharts(data);
+  // });
 }
 
 function calculatePercentage(games, totalGames) {
