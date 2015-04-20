@@ -94,7 +94,6 @@ fakedat[2][1] = 1;
       // .data(pie([0,100]))
       .attr("d", arc)
       .style("fill", function (d, i) {
-        console.log(d)
         this.dat = d;
         cnt++;
         if (cnt == 0) {
@@ -117,9 +116,8 @@ fakedat[2][1] = 1;
       var  count = 0
     svg.data(data)
      root.data(pie)
-     // path.transition();
-     console.dir(path)
-      path = path.data(function(d){console.log(d);return pie(d)}); // update the data
+
+      path = path.data(function(d){return pie(d)}); // update the data
 
       path.transition().duration(1000).attrTween("d", function (a) {
         if(this.progress === undefined){
@@ -148,10 +146,12 @@ fakedat[2][1] = 1;
         this._current = i(0);
         return function(t) {
 
-    
-          // text.text( format(i2(t) / 100) );
+          if(arc(i(t)).includes("NaN")){
+
+            return "M-9.184850993605149e-15,-50A50,50 0 0,0 -0.0006543488698345634,-49.99999999571828L-0.0003271744349172817,-24.99999999785914A25,25 0 0,1 -4.592425496802574e-15,-25Z"          
+          }
           return arc(i(t));
-        };
+        }.bind(this);
       });
                   cnt = 0;
 
@@ -159,6 +159,9 @@ fakedat[2][1] = 1;
       .append("text")
       .attr("text-anchor", "middle")
       .attr("transform", function (d) {
+        if( isNaN(d['endAngle']) || isNaN(d['startAngle']) ){
+          return ""
+        }
         return "translate(" + arc.centroid(d) + ")";
       })
       .text(function (d, i) {
