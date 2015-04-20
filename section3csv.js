@@ -7,61 +7,109 @@ var margin = {top: 10, right: 100, bottom: 100, left: 100},
     height = 200 - margin.top - margin.bottom;
 
 function section3PlaceHolder() {
-  x = d3.time.scale().range([0, width]);
-  y = d3.scale.linear().range([0, height]);
-
-  xAxis = d3.svg.axis().scale(x).orient("bottom");
-  yAxis = d3.svg.axis().scale(y).orient("left");
-
-  area = d3.svg.area()
-      .interpolate("monotone")
-      .x(function(d) { return x(addDays(d[0],-1)); })
-      // .y0(height)
-      .y(function(d) { return y(d[2]); });
-
-  svg = d3.select("section3").append("svg")
-  // .attr("style", "outline: thin solid red;")   //This will do the job
-      .attr("width", width + margin.left + margin.right - 40)
-      .attr("height", height + margin.top + margin.bottom -70);
-  svg.append("svg:line")
-        .attr("x1", margin.left)
-        .attr("y1", 0)
-        .attr("x2", width + margin.right )
-        .attr("y2", 0)
-        .style("stroke", "rgb(6,120,155)");
-  svg.append("defs").append("clipPath")
-      .attr("id", "clip")
-      .append("rect")
-      .attr("width", width)
-      .attr("height", height);
-
-  context = svg.append("g")
-      .attr("class", "context")
-      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-  x.domain([new Date("January 1, 2014 11:13:00"),new Date("December 1, 2014 11:13:00")]),
-  y.domain([1, 250]);
-  context.append("g")
-      .attr("class", "y axis")
-      .call(yAxis);
-
-  context.append("g")
-      .attr("class", "x axis")
-      .attr("transform", "translate(0," + height + ")")
-      .call(xAxis);
-
-  path = context.append("path")
-      //  .datum(dataset)
-      //  .attr("d", area)
-       .style('fill', 'none')
-       .style('stroke', 'steelblue')
-       .attr("stroke-width", "2");
+  // x = d3.time.scale().range([0, width]);
+  // y = d3.scale.linear().range([0, height]);
+  //
+  // xAxis = d3.svg.axis().scale(x).orient("bottom");
+  // yAxis = d3.svg.axis().scale(y).orient("left");
+  //
+  // area = d3.svg.area()
+  //     .interpolate("monotone")
+  //     .x(function(d) { return x(addDays(d[0],-1)); })
+  //     // .y0(height)
+  //     .y(function(d) { return y(d[2]); });
+  //
+  // svg = d3.select("section3").append("svg")
+  // // .attr("style", "outline: thin solid red;")   //This will do the job
+  //     .attr("width", width + margin.left + margin.right - 40)
+  //     .attr("height", height + margin.top + margin.bottom -70);
+  // svg.append("svg:line")
+  //       .attr("x1", margin.left)
+  //       .attr("y1", 0)
+  //       .attr("x2", width + margin.right )
+  //       .attr("y2", 0)
+  //       .style("stroke", "rgb(6,120,155)");
+  // svg.append("defs").append("clipPath")
+  //     .attr("id", "clip")
+  //     .append("rect")
+  //     .attr("width", width)
+  //     .attr("height", height);
+  //
+  // context = svg.append("g")
+  //     .attr("class", "context")
+  //     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+  //
+  // x.domain([new Date("January 1, 2014 11:13:00"),new Date("December 1, 2014 11:13:00")]),
+  // y.domain([1, 250]);
+  // context.append("g")
+  //     .attr("class", "y axis")
+  //     .call(yAxis);
+  //
+  // context.append("g")
+  //     .attr("class", "x axis")
+  //     .attr("transform", "translate(0," + height + ")")
+  //     .call(xAxis);
+  //
+  // path = context.append("path")
+  //     //  .datum(dataset)
+  //     //  .attr("d", area)
+  //      .style('fill', 'none')
+  //      .style('stroke', 'steelblue')
+  //      .attr("stroke-width", "2");
 }
 function section3() {
-  // d3.select("section3 > svg")
-  //      .remove();
+  d3.select("section3 > svg")
+       .remove();
 //create scales
+x = d3.time.scale().range([0, width]);
+y = d3.scale.linear().range([0, height]);
 
+xAxis = d3.svg.axis().scale(x).orient("bottom");
+yAxis = d3.svg.axis().scale(y).orient("left");
+
+area = d3.svg.area()
+    .interpolate("monotone")
+    .x(function(d) { return x(addDays(d[0],-1)); })
+    // .y0(height)
+    .y(function(d) { return y(d[2]); });
+
+svg = d3.select("section3").append("svg")
+// .attr("style", "outline: thin solid red;")   //This will do the job
+    .attr("width", width + margin.left + margin.right - 40)
+    .attr("height", height + margin.top + margin.bottom -70);
+svg.append("svg:line")
+      .attr("x1", margin.left)
+      .attr("y1", 0)
+      .attr("x2", width + margin.right )
+      .attr("y2", 0)
+      .style("stroke", "rgb(6,120,155)");
+svg.append("defs").append("clipPath")
+    .attr("id", "clip")
+    .append("rect")
+    .attr("width", width)
+    .attr("height", height);
+
+context = svg.append("g")
+    .attr("class", "context")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+x.domain([new Date("January 1, 2014 11:13:00"),new Date("December 1, 2014 11:13:00")]),
+y.domain([1, 250]);
+context.append("g")
+    .attr("class", "y axis")
+    .call(yAxis);
+
+context.append("g")
+    .attr("class", "x axis")
+    .attr("transform", "translate(0," + height + ")")
+    .call(xAxis);
+
+path = context.append("path")
+    //  .datum(dataset)
+    //  .attr("d", area)
+     .style('fill', 'none')
+     .style('stroke', 'steelblue')
+     .attr("stroke-width", "2");
 
 
 
