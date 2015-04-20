@@ -97,3 +97,21 @@ section1 .surface {
 section1 .mouseover {
   fill: "#aaaaaa";
 }
+.custom-combobox {
+  font: 9px sans-serif;
+  position: relative;
+  display: inline-block;
+}
+.custom-combobox-toggle {
+  font: 9px sans-serif;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  margin-left: -1px;
+  padding: 0;
+}
+.custom-combobox-input {
+  font: 9px sans-serif;
+  margin: 0;
+  padding: 5px 10px;
+}
