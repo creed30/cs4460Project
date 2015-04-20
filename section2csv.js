@@ -9,6 +9,7 @@ section1data[1][0] = 0;
 section1data[1][1] = 0;
 section1data[2][0] = 0;
 section1data[2][1] = 0;
+var container;
 function incrementSurfaceCount(won,surface){
   switch(surface){
     case 'Grass':
@@ -41,32 +42,6 @@ var section2context = {};
 function section2init(){
   var margin = {top: 10, right: 100, bottom: 100, left: 100},
       width = window.innerWidth - margin.left - margin.right,
-      height = 75 ;
-
-  // var parseDate = d3.time.format("%b %Y").parse;
-
-  var x = d3.time.scale().range([0, width]),
-      y = d3.scale.linear().range([0, height]);
-
-  var xAxis = d3.svg.axis().scale(x).orient("bottom"),
-      yAxis = d3.svg.axis().scale(y).orient("left");
-  var svg = d3.select("section2").append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height );
-
-
-  }
-section2init();
-function section2() {
-  tournaments = [];
-  d3.select("section2 > svg")
-       .remove();
-  var m = [80, 80, 80, 80];
-  var w = width - m[1] - m[3];
-  var h = (height - m[0] - m[2])/3;
-
-  var margin = {top: 10, right: 100, bottom: 100, left: 100},
-      width = window.innerWidth - margin.left - margin.right,
       height = window.innerHeight/2 - margin.top - margin.bottom;
 
   // var parseDate = d3.time.format("%b %Y").parse;
@@ -76,9 +51,41 @@ function section2() {
 
   var xAxis = d3.svg.axis().scale(x).orient("bottom"),
       yAxis = d3.svg.axis().scale(y).orient("left");
-  var svg = d3.select("section2").append("svg")
+  container = d3.select("section2").append("div").attr('id','container');
+  var svg = container.append("svg")
     .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom);
+    .attr("height", height );
+
+
+  }
+section2init();
+function section2() {
+  tournaments = [];
+  d3.select("section2 > div")
+       .remove();
+  var m = [80, 80, 80, 80];
+  var w = width - m[1] - m[3];
+  var h = (height - m[0] - m[2])/3;
+
+  var margin = {top: 10, right: 100, bottom: 100, left: 100},
+      width = window.innerWidth - margin.left - margin.right,
+      height = window.innerHeight;
+
+  // var parseDate = d3.time.format("%b %Y").parse;
+
+  var x = d3.time.scale().range([0, width]),
+      y = d3.scale.linear().range([0, height]);
+
+  var xAxis = d3.svg.axis().scale(x).orient("bottom"),
+      yAxis = d3.svg.axis().scale(y).orient("left");
+      container = d3.select("section2").append("div").attr('id','container');
+      // var d = document.getElementById('container');
+      // d.style.position = "absolute";
+      // d.style.left = 100+'px';
+      // d.style.top = 0+'px';
+      var svg = container.append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height);
 
   var context = svg.append("g")
       .attr("class", "section2context")

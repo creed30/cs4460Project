@@ -97,3 +97,13 @@ section1 .surface {
 section1 .mouseover {
   fill: "#aaaaaa";
 }
+div#container {
+  position:relative;
+        left: 100px;
+        /*top: 100px;*/
+        /*bottom: 100px;*/
+        height: 200px;
+        width: 1000px;
+        border:2px solid #000;
+        overflow: scroll;
+      }
