@@ -20,9 +20,15 @@ function section3PlaceHolder() {
       .y(function(d) { return y(d[2]); });
 
   svg = d3.select("section3").append("svg")
-      .attr("width", width + margin.left + margin.right)
-      .attr("height", height + margin.top + margin.bottom);
-
+  // .attr("style", "outline: thin solid red;")   //This will do the job
+      .attr("width", width + margin.left + margin.right - 40)
+      .attr("height", height + margin.top + margin.bottom -70);
+  svg.append("svg:line")
+        .attr("x1", margin.left)
+        .attr("y1", 0)
+        .attr("x2", width + margin.right )
+        .attr("y2", 0)
+        .style("stroke", "rgb(6,120,155)");
   svg.append("defs").append("clipPath")
       .attr("id", "clip")
       .append("rect")
