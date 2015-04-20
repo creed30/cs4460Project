@@ -58,6 +58,12 @@ function section2init(){
   }
 section2init();
 function section2() {
+  section1data[0][0] = 0;
+section1data[0][1] = 0;
+section1data[1][0] = 0;
+section1data[1][1] = 0;
+section1data[2][0] = 0;
+section1data[2][1] = 0;
   tournaments = [];
   d3.select("section2 > svg")
        .remove();
