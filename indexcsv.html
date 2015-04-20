@@ -13,13 +13,21 @@
     <link rel="stylesheet" type="text/css" href="/css/index.css" media="screen" />
 </head>
 
-<body onload="loadYear();section2init();section3PlaceHolder();">
+<body onload="$('section1').fadeOut('slow');
+    $('section2').fadeOut('slow');
+    $('section3').fadeOut(1);loadYear();section2init();section3PlaceHolder();">
   <div id="selection">
     <select id="selectYear" onChange="loadPlayers();">
         <option id="SelectYear">SelectYear</option>
     </select>
 
-    <select id="selectPlayer" onChange="section1();section2();section3()">
+    <select id="selectPlayer" onChange="$('section1').fadeOut(200);
+    $('section2').fadeOut(200);
+    $('section3').fadeOut(200);
+    setTimeout(function(){section1();section2();section3()},200);
+    setTimeout(function(){$('section1').fadeIn('200');
+    $('section2').fadeIn('200');
+    $('section3').fadeIn('200');},300)">
         <option id="0">SelectPlayer</option>
     </select>
   </div>
