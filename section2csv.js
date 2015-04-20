@@ -38,6 +38,25 @@ function incrementSurfaceCount(won,surface){
 
 var tournaments = [];
 var section2context = {};
+function section2init(){
+  var margin = {top: 10, right: 100, bottom: 100, left: 100},
+      width = window.innerWidth - margin.left - margin.right,
+      height = 75 ;
+
+  // var parseDate = d3.time.format("%b %Y").parse;
+
+  var x = d3.time.scale().range([0, width]),
+      y = d3.scale.linear().range([0, height]);
+
+  var xAxis = d3.svg.axis().scale(x).orient("bottom"),
+      yAxis = d3.svg.axis().scale(y).orient("left");
+  var svg = d3.select("section2").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height );
+
+
+  }
+section2init();
 function section2() {
   tournaments = [];
   d3.select("section2 > svg")
