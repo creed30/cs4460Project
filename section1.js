@@ -145,15 +145,10 @@ fakedat[2][1] = 1;
         var i2 = d3.interpolate(this.progress, wins/totalGames)
         this._current = i(0);
         return function(t) {
-
-          if(arc(i(t)).includes("NaN")){
-
-            return "M-9.184850993605149e-15,-50A50,50 0 0,0 -0.0006543488698345634,-49.99999999571828L-0.0003271744349172817,-24.99999999785914A25,25 0 0,1 -4.592425496802574e-15,-25Z"          
-          }
           return arc(i(t));
-        }.bind(this);
+        }
       });
-                  cnt = 0;
+      cnt = 0;
 
        svg.selectAll(".arc")
       .append("text")
@@ -190,13 +185,13 @@ fakedat[2][1] = 1;
       });
     },100);
 
-
+      cnt = 0;
       root.append("svg:title")
       .text(function(d, i) {
         if (i == 0) {
-          return "Win Games: " + d.value;
+          return "Win Games: " + data[cnt][0];
         } else {
-          return "Lose Games: " + d.value;
+          return "Lose Games: " + data[cnt++][1];
         }
       })
       .each(function(d) {
@@ -229,8 +224,6 @@ fakedat[2][1] = 1;
           return "CLAY";
         }
       });
-
-
 }
 
 function getStats(player, year) {
