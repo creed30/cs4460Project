@@ -201,7 +201,7 @@ var player = document.getElementById('selectPlayer').value;
           maxGames = tournament['games'].length
         tournaments.push(tournament)
        }
-       height = (tournaments.length * 20) + 10
+       height = (tournaments.length * 20) + 30
        d3.select("section2 > svg")
       .attr("height", height );
 
@@ -215,14 +215,31 @@ var player = document.getElementById('selectPlayer').value;
   // to get a value that is either negative, positive, or zero.
       return a[0] - b[0];
       });
+        //Tournament Title
+        context.append("text")
+        .attr("x",margin.left + 10)
+        .attr("y",(function(d,i) {return i* 20 + 10;}))
+        .text("Tournament")
+        .style("font-size","12px");
+
+        for(var inc = 0; inc <7;inc++){
+          context.append("text")
+          .attr("x",margin.left + 220 + 82 * inc)
+          .attr("y",10)
+          // .attr("y",(function(d,i) {return i* 20 + 10;}))
+          .text("Round " + (inc+1))
+          .style("font-size","12px");
+        }
+
+
               temp = context.selectAll("g")
               .data(tournaments)
               .enter()
               .append("text")
               .attr("x",margin.left)
-              .attr("y",(function(d,i) {return i* 20 + 10;}))
+              .attr("y",(function(d,i) {return i* 20 + 30;}))
               .on("mouseover", function(d,i){
-                    var recty = i*20
+                    var recty = i*20 + 22
                     section2context.selectAll('.section2brushrect').remove();
                     section2context
                     .insert("rect",":first-child")
@@ -260,7 +277,7 @@ var player = document.getElementById('selectPlayer').value;
                     section2context.selectAll('.section2brushrect').remove();
 
 
-                    var recty = i*20
+                    var recty = i*20 + 22
                     section2context.selectAll('.section2brushrect').remove();
                     section2context
                     .insert("rect",":first-child")
@@ -299,7 +316,7 @@ var player = document.getElementById('selectPlayer').value;
               // .attr('height',12)
               // .attr('width',width)
               .attr("x",200 + margin.right)
-              .attr("y",(function(d,i) {return i* 20;}))
+              .attr("y",(function(d,i) {return i* 20+22;}))
               // .text(function(d){return d.name})
 
               // .append('tournament')
