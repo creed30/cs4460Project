@@ -110,7 +110,7 @@ var player = document.getElementById('selectPlayer').value;
                .attr("y", -6)
                .attr("height", height + 7);
     //  console.log(dataset.filter(function(n){ return n != undefined }));
-     console.log(dataset);
+    //  console.log(dataset);
    });
 
 

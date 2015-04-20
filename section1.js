@@ -95,17 +95,10 @@ function showCharts(data) {
         } else {
           return "Lose Games: " + d.value;
         }
-
+      })
+      .each(function(d) {
+        this._current = d;
       });
-
-  d3.selectAll(".piechart-part")
-    .on("mouseover", function (d, i) {
-      var mouse = d3.mouse(svg.node()).map( function(d) { return parseInt(d); } );
-      this.setAttribute("class", "arc-mouseover");
-    })
-    .on("mouseout",  function(d, i) {
-      this.removeAttribute("class", "arc-mouseover");
-    });
 
   svg.append("svg:text")
       .attr("dy", ".35em")
@@ -166,6 +159,17 @@ function showCharts(data) {
           return calculatePercentage(d.data, totalGames);
         }
       });
+
+  d3.selectAll("#selectPlayer")
+      .on("change", change);
+
+  function arcTween(a) {
+    var i = d3.interpolate(this._current, a);
+    this._current = i(0);
+    return function(t) {
+      return arc(i(t));
+    };
+  }
 }
 
 function getStats(player, year) {
