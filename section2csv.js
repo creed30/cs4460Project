@@ -347,7 +347,7 @@ var player = document.getElementById('selectPlayer').value;
 
               roundsvg = game.selectAll('g').data(function(d,i){return d['rounds']}).enter().append('rect')
                 .attr("height", 12)
-                .attr("width", 12)
+                .attr("width", function(d){if(d['length'] > 12) return 12; else return d['length']})
                 .attr('x',function(d,i){return i*14})
                 .attr('style',function(d){
                   if(d['victor'])
