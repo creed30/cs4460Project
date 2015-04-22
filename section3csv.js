@@ -180,7 +180,7 @@ path = context.append("path")
     y.domain([1, d3.max(dataset.map(function(d) { return d[2]; }))]);
     context.select(".x.axis")
     .call(xAxis)
-    // add rank label to X axis
+    // add rank label to Y axis
     .append("text")
     .attr("x",30)
     .attr("y",-30)
