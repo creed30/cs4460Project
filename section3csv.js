@@ -1,3 +1,6 @@
+//graph/context adapted from http://bl.ocks.org/mbostock/1667367 - 50% of source used. heavily adapted
+//transition adapted from http://jsfiddle.net/realnumber/3h4SW/2/ - 70% of source used. heavily adapted
+
 var brush;
 var brushGraph;
 var x,y,xAxis,yAxis,year,player,area,path,totalLength;
