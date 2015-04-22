@@ -89,6 +89,11 @@ div.invis {   //hides div class
   top: 50px;
   left: 100px;
 }
+dropdownbuffer {
+  position: absolute;
+  top: 0px;
+  left: 170px;
+}
 
 section1 .surface {
   font-weight: bold;
