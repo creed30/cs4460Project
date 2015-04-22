@@ -33,18 +33,17 @@ function showCharts(data) {
   var totalHardGames = data[1][0] + data[1][1];
   var totalClayGames = data[2][0] + data[2][1];
 
+  var fakedat = [];
+  fakedat[0] = [];
+  fakedat[1] = [];
+  fakedat[2] = [];
 
-var fakedat = [];
-fakedat[0] = []
-fakedat[1] = []
-fakedat[2] = []
-
-fakedat[0][0] = 0;
-fakedat[0][1] = 1;
-fakedat[1][0] = 0;
-fakedat[1][1] = 1;
-fakedat[2][0] = 0;
-fakedat[2][1] = 1;
+  fakedat[0][0] = 0;
+  fakedat[0][1] = 1;
+  fakedat[1][0] = 0;
+  fakedat[1][1] = 1;
+  fakedat[2][0] = 0;
+  fakedat[2][1] = 1;
 
   // Define the margin, radius, and color scale. The color scale will be
   // assigned by index, but if you define your data using objects, you could pass
@@ -84,113 +83,112 @@ fakedat[2][1] = 1;
   var cnt = -1;
   pie = d3.layout.pie().sort(null).startAngle(2*Math.PI).endAngle(0)
   root = svg.selectAll("path")
-      .data(pie)
-      .enter().append("svg:g")
-      .attr("class", "arc");
+            .data(pie)
+            .enter().append("svg:g")
+            .attr("class", "arc");
 
 
-      var path = root.append("svg:path")
-      .attr("class", "piechart-part")
-      // .data(pie([0,100]))
-      .attr("d", arc)
-      .style("fill", function (d, i) {
-        this.dat = d;
-        cnt++;
-        if (cnt == 0) {
-          return color.GRASS;
-        } else if (cnt == 2) {
-          return color.HARD;
-        } else if (cnt == 4) {
-          return color.CLAY;
-        } else {
-          return color.WHITE;
+  var path = root.append("svg:path")
+                  .attr("class", "piechart-part")
+                  // .data(pie([0,100]))
+                  .attr("d", arc)
+                  .style("fill", function (d, i) {
+                    this.dat = d;
+                    cnt++;
+                    if (cnt == 0) {
+                      return color.GRASS;
+                    } else if (cnt == 2) {
+                      return color.HARD;
+                    } else if (cnt == 4) {
+                      return color.CLAY;
+                    } else {
+                      return color.WHITE;
+                    }
+                  })
+                  .each(function(d) { this._current = d; });
+
+  // store the initial values
+  // svg.data(fakedat)
+  var timeout = setTimeout(function () {
+    clearTimeout(timeout);
+    var count = 0;
+    svg.data(data);
+    root.data(pie);
+    path = path.data(function(d){return pie(d)}); // update the data
+
+    path.transition().duration(1000).attrTween("d", function (a) {
+      if (this.progress === undefined) {
+        this.progress = 0;
+      }
+
+      var totalGames = 0;
+      var wins = 0;
+
+      if (count < 2) {
+        totalGames = totalGrassGames;
+        wins = data[0][0];
+      } else if (count < 4) {
+        totalGames = totalHardGames;
+        wins = data[1][0];
+      } else {
+        totalGames = totalClayGames;
+        wins = data[2][0];
+      }
+
+      count++;
+      // Store the displayed angles in _current.
+      // Then, interpolate from _current to the new angles.
+      // During the transition, _current is updated in-place by d3.interpolate.
+      var i  = d3.interpolate(this._current, a);
+      var i2 = d3.interpolate(this.progress, wins/totalGames);
+      this._current = i(0);
+      return function(t) {
+        if(arc(i(t)).includes("NaN")){
+          return "M-9.184850993605149e-15,-50A50,50 0 0,0 -0.0006543488698345634,-49.99999999571828L-0.0003271744349172817,-24.99999999785914A25,25 0 0,1 -4.592425496802574e-15,-25Z"
         }
-      })
-      .each(function(d) { this._current = d; })
-      ; // store the initial values
-     // svg.data(fakedat)
 
-    var timeout = setTimeout(function () {
-      clearTimeout(timeout);
+        return arc(i(t));
+      }
+    });
 
-      var  count = 0
-    svg.data(data)
-     root.data(pie)
-
-      path = path.data(function(d){return pie(d)}); // update the data
-
-      path.transition().duration(1000).attrTween("d", function (a) {
-        if(this.progress === undefined){
-          this.progress = 0;
-        }
-        var totalGames = 0;
-        var wins = 0;
-        if (count < 2) {
-          totalGames = totalGrassGames;
-          wins = data[0][0]
-        } else if (count < 4) {
-          totalGames = totalHardGames;
-                    wins = data[1][0]
-
-        } else {
-          totalGames = totalClayGames;
-                    wins = data[2][0]
-
-        }
-        count++;
-        // Store the displayed angles in _current.
-        // Then, interpolate from _current to the new angles.
-        // During the transition, _current is updated in-place by d3.interpolate.
-        var i  = d3.interpolate(this._current, a);
-        var i2 = d3.interpolate(this.progress, wins/totalGames)
-        this._current = i(0);
-        return function(t) {
-          if(arc(i(t)).includes("NaN")){
-            return "M-9.184850993605149e-15,-50A50,50 0 0,0 -0.0006543488698345634,-49.99999999571828L-0.0003271744349172817,-24.99999999785914A25,25 0 0,1 -4.592425496802574e-15,-25Z"          
+    cnt = 0;
+    svg.selectAll(".arc")
+        .append("text")
+        .attr("text-anchor", "middle")
+        .attr("transform", function (d) {
+          if( isNaN(d['endAngle']) || isNaN(d['startAngle']) ){
+            return "";
           }
-          
-          return arc(i(t));
-        }
-      });
-      cnt = 0;
+          return "translate(" + arc.centroid(d) + ")";
+        })
+        .text(function (d, i) {
+          var totalGames = 0;
+          if (cnt < 2) {
+            totalGames = totalGrassGames;
+          } else if (cnt < 4) {
+            totalGames = totalHardGames;
+          } else {
+            totalGames = totalClayGames;
+          }
+          cnt++;
+          if (i == 1 && totalGames != 0 && d.data == totalGames) {
+            return "0% Win";
+          }
 
-       svg.selectAll(".arc")
-      .append("text")
-      .attr("text-anchor", "middle")
-      .attr("transform", function (d) {
-        if( isNaN(d['endAngle']) || isNaN(d['startAngle']) ){
-          return ""
-        }
-        return "translate(" + arc.centroid(d) + ")";
-      })
-      .text(function (d, i) {
-        var totalGames = 0;
-        if (cnt < 2) {
-          totalGames = totalGrassGames;
-        } else if (cnt < 4) {
-          totalGames = totalHardGames;
-        } else {
-          totalGames = totalClayGames;
-        }
-        cnt++;
-        if (i == 1 && totalGames != 0 && d.data == totalGames) {
-          return "0% Win";
-        }
+          if (i == 1) {
+            return "";
+          }
 
-        if (i == 1) {
-          return "";
-        }
+          if (totalGames == 0) {
+            return "";
+          } else {
+            return calculatePercentage(d.data, totalGames);
+          }
+        });
+  }, 100);
 
-        if (totalGames == 0) {
-          return "";
-        } else {
-          return calculatePercentage(d.data, totalGames);
-        }
-      });
-    },100);
-
-      cnt = 0;
-      root.append("svg:title")
+  cnt = 0;
+  root.append("svg:title")
       .text(function(d, i) {
         if (i == 0) {
           return "Win Games: " + data[cnt][0];
@@ -235,10 +233,6 @@ function getStats(player, year) {
     'player': player,
     'year': year
   };
-
-  // $.get("http://localhost:9615/getStats", params, function (data) {
-  //   showCharts(data);
-  // });
 }
 
 function calculatePercentage(games, totalGames) {
