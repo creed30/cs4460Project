@@ -76,6 +76,14 @@ function showCharts(data) {
       .append("svg:g")
       .attr("transform", "translate(" + (r + m) + "," + (r + m) + ")");
 
+      // d3.select("section1").append("svg:line")
+      //       .attr("x1", 0)
+      //       .attr("y1", 0)
+      //       .attr("x2", width + margin.right )
+      //       .attr("y2", width)
+      //       .style("stroke", "rgb(6,120,155)");
+      // svg
+
   // The data for each svg:svg element is a row of numbers (an array). We pass
   // that to d3.layout.pie to compute the angles for each arc. These start and end
   // angles are passed to d3.svg.arc to draw arcs! Note that the arc radius is
@@ -199,7 +207,13 @@ function showCharts(data) {
       .each(function(d) {
         this._current = d;
       });
-
+      //borders between pie charts
+      svg.append("svg:line")
+            .attr("x1", -59)
+            .attr("y1", -50)
+            .attr("x2", -59 )
+            .attr("y2", 300)
+            .style("stroke", "rgb(6,120,155)")
   svg.append("svg:text")
       .attr("dy", ".35em")
       .attr("text-anchor", "middle")

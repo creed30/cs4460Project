@@ -216,16 +216,31 @@ var player = document.getElementById('selectPlayer').value;
       return a[0] - b[0];
       });
         //Tournament Title
+        //top border
+        svg.append("svg:line")
+              .attr("x1", margin.left)
+              .attr("y1", 0)
+              .attr("x2", width + margin.right )
+              .attr("y2", 0)
+              .style("stroke", "rgb(6,120,155)");
+        //Tournament Border
+        svg.append("svg:line")
+              .attr("x1", 295)
+              .attr("y1", 10)
+              .attr("x2", 295 )
+              .attr("y2", height-10)
+              .style("stroke", "rgb(6,120,155)");
+
         context.append("text")
         .attr("x",margin.left + 10)
-        .attr("y",(function(d,i) {return i* 20 + 10;}))
+        .attr("y",(function(d,i) {return i* 20 + 15;}))
         .text("Tournament")
         .style("font-size","12px");
 
         for(var inc = 0; inc <7;inc++){
           context.append("text")
           .attr("x",margin.left + 220 + 82 * inc)
-          .attr("y",10)
+          .attr("y",15)
           // .attr("y",(function(d,i) {return i* 20 + 10;}))
           .text("Round " + (inc+1))
           .style("font-size","12px");
