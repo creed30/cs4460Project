@@ -95,6 +95,13 @@ dropdownbuffer {
   left: 170px;
 }
 
+piechartbuffer {
+  position: absolute;
+  top: 0px;
+  left: 50px;
+}
+
+
 section1 .surface {
   font-weight: bold;
 }
