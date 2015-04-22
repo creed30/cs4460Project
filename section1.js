@@ -143,7 +143,7 @@ function showCharts(data) {
       var i2 = d3.interpolate(this.progress, wins/totalGames);
       this._current = i(0);
       return function(t) {
-        if(arc(i(t)).includes("NaN")){
+        if(arc(i(t)).indexOf("NaN") > -1){
           return "M-9.184850993605149e-15,-50A50,50 0 0,0 -0.0006543488698345634,-49.99999999571828L-0.0003271744349172817,-24.99999999785914A25,25 0 0,1 -4.592425496802574e-15,-25Z"
         }
 
