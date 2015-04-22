@@ -179,7 +179,16 @@ path = context.append("path")
     x.domain([d3.min(dataset.map(function(d) { return addDays(d[0],-1); })),d3.max(dataset.map(function(d) { return addDays(d[0],2); }))])
     y.domain([1, d3.max(dataset.map(function(d) { return d[2]; }))]);
     context.select(".x.axis")
-    .call(xAxis);
+    .call(xAxis)
+    // add rank label to X axis
+    .append("text")
+    .attr("x",30)
+    .attr("y",-30)
+    .text("Rank")
+    .style("font-size","9px")
+    .attr("transform", function(d) {
+                return "rotate(-90)"
+                });
     context.select(".y.axis")
     .call(yAxis);
     path
