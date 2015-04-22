@@ -158,6 +158,16 @@
     $( "#toggle" ).click(function() {
       $( "#selectPlayer" ).toggle();
     });
+
+    $( "#selectYear" ).combobox({
+          select: function (event, ui) {
+            loadPlayers();
+          }
+      });
+    $( "#toggle" ).click(function() {
+      $( "#selectYear" ).toggle();
+    });
+
   });
   </script>
     <link rel="stylesheet" type="text/css" href="/css/index.css" media="screen" />
@@ -170,7 +180,7 @@
     <select id="selectYear" onChange="loadPlayers();">
         <option id="SelectYear">SelectYear</option>
     </select>
-
+    <dropdownbuffer>
     <select id="selectPlayer" onChange="$('section1').fadeOut(200);
     $('section2').fadeOut(200);
     $('section3').fadeOut(200);
@@ -180,6 +190,7 @@
     $('section3').fadeIn('400');},300)">
         <option id="0">SelectPlayer</option>
     </select>
+  <dropdownbuffer>
   </div>
   <section1>
   </section1>
