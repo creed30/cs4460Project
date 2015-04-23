@@ -1,3 +1,5 @@
+//load the years of the files of the csv files into the
+//select box
 function loadYear() {
   // get selectbox
   var selectBox = document.getElementById('selectYear');
@@ -15,6 +17,8 @@ function loadYear() {
   }
 }
 
+//load the players available in the year that the
+//user has selected
 function loadPlayers() {
 	var year = document.getElementById('selectYear');
 	var yearInput = year.value;
@@ -30,30 +34,27 @@ function loadPlayers() {
 	{
 	 dataset = data.map(function(d)
 	 {
-	     return d["Winner"];
-	   });
-	   dataset2 = data.map(function(d)
-	   {
-       return d["Loser"];
-	   });
-
-	    // console.log(uniq(dataset.sort()).length);
-	    // console.log(uniq(dataset2.sort()).length);
-	    var parseData = dataset.concat(dataset2);
-	    // console.log(uniq(parseData.sort()).length);
-	    parseData = uniq(parseData.sort().reverse());
-	    while (parseData.length > 0) {
-	      var option = document.createElement("option");
-	      var temp = parseData.pop();
-	          option.text = temp;
-	          option.id = temp;
-	          option.value = temp;
-	          players.add(option);
-	    }
-	  });
+	   return d["Winner"];
+	 });
+	 dataset2 = data.map(function(d)
+	 {
+     return d["Loser"];
+   });
+   var parseData = dataset.concat(dataset2);
+	 parseData = uniq(parseData.sort().reverse());
+	 while (parseData.length > 0) {
+	   var option = document.createElement("option");
+	   var temp = parseData.pop();
+	   option.text = temp;
+	   option.id = temp;
+	   option.value = temp;
+	   players.add(option);
+	  }
+	});
 
 }
 
+//helper function to obtain unique values
 function uniq(a) {
     var seen = {};
     return a.filter(function(item) {
