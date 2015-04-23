@@ -1,43 +1,22 @@
+// Setup the array of arrays to be used for section 1.
+// This is an artifact from us starting using a DB, and later switching to CSVs
 var section1data = [];
 section1data[0] = []
 section1data[1] = []
 section1data[2] = []
 
-section1data[0][0] = 0;
-section1data[0][1] = 0;
-section1data[1][0] = 0;
-section1data[1][1] = 0;
-section1data[2][0] = 0;
-section1data[2][1] = 0;
-function incrementSurfaceCount(won,surface){
-  switch(surface){
-    case 'Grass':
-      if(won == 'Winner')
-        section1data[0][0]++;
-      else
-        section1data[0][1]++;
 
-      break;
-    case 'Hard':
-        if(won == 'Winner')
-        section1data[1][0]++;
-      else
-        section1data[1][1]++;
-      break;
-    case 'Clay':
-        if(won == 'Winner')
-        section1data[2][0]++;
-      else
-        section1data[2][1]++;
-      break;
-    default:
-      console.log("Something broke!!!")
-      break;
-  }
-}
+// Setup global variables for section 2. Used in brushing and setting up the odd section 2 vis
 
+// Tournaments is a data structure that contains a selection of tournaments
+// Each tournament contains a couple games
+// Each game contains a couple of rounds
 var tournaments = [];
+
+
 var section2context = {};
+
+// Initialize section 2
 function section2init(){
   var margin = {top: 10, right: 100, bottom: 100, left: 100},
       width = window.innerWidth - margin.left - margin.right,
@@ -56,17 +35,22 @@ function section2init(){
 
 
   }
-section2init();
+
+// Update section 2
 function section2() {
-  section1data[0][0] = 0;
+// Wipe the section 1 data and tournaments
+section1data[0][0] = 0;
 section1data[0][1] = 0;
 section1data[1][0] = 0;
 section1data[1][1] = 0;
 section1data[2][0] = 0;
 section1data[2][1] = 0;
   tournaments = [];
+  // Clear the currently existing section 2 stuff
   d3.select("section2 > svg")
        .remove();
+
+  // svg setup
   var m = [80, 80, 80, 80];
   var w = width - m[1] - m[3];
   var h = (height - m[0] - m[2])/3;
@@ -75,7 +59,6 @@ section1data[2][1] = 0;
       width = window.innerWidth - margin.left - margin.right,
       height = window.innerHeight/2 - margin.top - margin.bottom;
 
-  // var parseDate = d3.time.format("%b %Y").parse;
 
   var x = d3.time.scale().range([0, width]),
       y = d3.scale.linear().range([0, height]);
@@ -88,11 +71,16 @@ section1data[2][1] = 0;
 
   var context = svg.append("g")
       .attr("class", "section2context")
-      // .attr("x", 500)
+      
       section2context = context
-var year = document.getElementById('selectYear').value;
-var player = document.getElementById('selectPlayer').value;
 
+      // For loading the csvs
+  var year = document.getElementById('selectYear').value;
+  var player = document.getElementById('selectPlayer').value;
+
+
+  // Load the data related to this player and sort it into the tournaments data structure
+  // This logic loop also handles the section 1 data structure
   var dataset = []
   d3.csv("ATPDATA/ATP"+year+".csv", function(data) {
 
@@ -207,7 +195,11 @@ var player = document.getElementById('selectPlayer').value;
 
 
      });
+
+      // This kicks off section1
       showCharts(section1data);
+
+      // This is used later for the up/down arrows displaying how a tournament changed the rank
       tournaments.forEach(function(tournament,index){
         if(tournaments[index+1] != undefined){
 
@@ -236,49 +228,33 @@ var player = document.getElementById('selectPlayer').value;
               .attr("x2", 295 )
               .attr("y2", height-10)
               .style("stroke", "rgb(6,120,155)");
-
+        // Tournament title
         context.append("text")
         .attr("x",margin.left + 10)
         .attr("y",(function(d,i) {return i* 20 + 15;}))
         .text("Tournament")
         .style("font-size","12px");
-
+        // Rounds title
         for(var inc = 0; inc <7;inc++){
           context.append("text")
           .attr("x",margin.left + 220 + 82 * inc)
           .attr("y",15)
-          // .attr("y",(function(d,i) {return i* 20 + 10;}))
           .text("Round " + (inc+1))
           .style("font-size","12px");
         }
 
-
-              temp = context.selectAll("g")
+              // Setup tourney names
+              tournamentnames = context.selectAll("g")
               .data(tournaments)
               .enter()
               .append("text")
               .attr("x",margin.left)
               .attr("y",(function(d,i) {return i* 20 + 30;}))
-              .on("mouseover", function(d,i){
-                    var recty = i*20 + 22
-                    section2context.selectAll('.section2brushrect').remove();
-                    section2context
-                    .insert("rect",":first-child")
-                    .attr("class", "section2brushrect")
-                    .attr('height',15)
-                    .attr("y",(function() {return recty;}))
-                    .attr('width',width)
-                    .attr('x',margin.left)
-                    .attr('style',function(){
-                     return "fill:rgb(221,221,221)"
-                    })
-
-                  d3.select(".brush").call(brush.extent([d['start'],d['end']]))
-              })
+              .on("mouseover", section2mouseover)
               // .attr("x",(function(d,i) {return i*30;}))
               .text(function(d){return d.name})
 
-
+              // Setup arrows
               arrows = context.selectAll("g")
               .data(tournaments)
               .enter()
@@ -288,68 +264,34 @@ var player = document.getElementById('selectPlayer').value;
         .attr('stroke-width',1)
         .attr('fill',function(d){if(d['rankup'] >= 1){return 'green'} else if (d['rankup'] <= -1){ return 'red'} else return 'blue'})
         .attr('transform',function(d,i){ return "translate("+(margin.left - 10)+","+( i* 20 + 28)+")"; })
-              .on("mouseover", function(d,i){
-                    var recty = i*20 + 22
-                    section2context.selectAll('.section2brushrect').remove();
-                    section2context
-                    .insert("rect",":first-child")
-                    .attr("class", "section2brushrect")
-                    .attr('height',15)
-                    .attr("y",(function() {return recty;}))
-                    .attr('width',width)
-                    .attr('x',margin.left)
-                    .attr('style',function(){
-                     return "fill:rgb(221,221,221)"
-                    })
-
-                  d3.select(".brush").call(brush.extent([d['start'],d['end']]))
-              })
+              .on("mouseover", section2mouseover)
               .append("svg:title")
               .text(function(d){return "Rank changed by: " + d['rankup']});
-              // .attr("x",(function(d,i) {return i*30;}))
 
-
+              // Setup the main group for each row
                node = context.selectAll("g")
               .data(tournaments)
               .enter()
               .append('g')
-              .on("mouseover", function(d,i){
-                    section2context.selectAll('.section2brushrect').remove();
-
-
-                    var recty = i*20 + 22
-                    section2context.selectAll('.section2brushrect').remove();
-                    section2context
-                    .insert("rect",":first-child")
-                    .attr("class", "section2brushrect")
-                    .attr('height',15)
-                    .attr("y",(function() {return recty;}))
-                    .attr('width',width)
-                    .attr('x',margin.left)
-                    .attr('style',function(){
-                      return "fill:rgb(221,221,221)"
-                    })
-
-
-                  d3.select(".brush").call(brush.extent([new Date(d['start']),new Date(d['end'])]))
-              })
+              .on("mouseover", section2mouseover)
               .append('svg')
               .attr("x",200 + margin.right)
               .attr("y",(function(d,i) {return i* 20+22;}))
 
+              // Setup the game group
               game = node.selectAll("svg").data(function(d){return d['games']}).enter()
               .append('g')
               .attr("transform", function(d,i){ return "translate(" + i*82 + "," + 0 + ")"})
 
+              // Setup the game rectangle
               test = game.append('rect')
               .attr('height',12)
               .attr('width',80)
-              // .attr('x',function(d,i){return i*82})
               .attr('style',function(d){
                     return "fill:rgb(0,0,0)"
                 })
 
-
+              // Setup the round rectangles
               roundsvg = game.selectAll('g').data(function(d,i){return d['rounds']}).enter().append('rect')
                 .attr("height", 12)
                 .attr("width", function(d){if(d['length'] > 12) return 12; else return d['length']})
@@ -373,4 +315,52 @@ function addDays(dateObj, numDays) {
 
 function parseDate(dat) {
   return Date(dat.substring(6,10),dat.substring(0,2)-1,dat.substring(3,5));
+}
+
+
+// Used for data management of the section 1 data structure
+function incrementSurfaceCount(won,surface){
+  switch(surface){
+    case 'Grass':
+      if(won == 'Winner')
+        section1data[0][0]++;
+      else
+        section1data[0][1]++;
+
+      break;
+    case 'Hard':
+        if(won == 'Winner')
+        section1data[1][0]++;
+      else
+        section1data[1][1]++;
+      break;
+    case 'Clay':
+        if(won == 'Winner')
+        section1data[2][0]++;
+      else
+        section1data[2][1]++;
+      break;
+    default:
+      console.log("Something broke!!!")
+      break;
+  }
+}
+
+
+// Used whenever we mouse over an object in section 2
+function section2mouseover(d,i){
+  var recty = i*20 + 22
+                    section2context.selectAll('.section2brushrect').remove();
+                    section2context
+                    .insert("rect",":first-child")
+                    .attr("class", "section2brushrect")
+                    .attr('height',15)
+                    .attr("y",(function() {return recty;}))
+                    .attr('width',width)
+                    .attr('x',margin.left)
+                    .attr('style',function(){
+                     return "fill:rgb(221,221,221)"
+                    })
+
+                  d3.select(".brush").call(brush.extent([d['start'],d['end']]))
 }
