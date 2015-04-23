@@ -130,8 +130,8 @@ section1 .mouseover {
 
 #title {
   font-weight: bold;
-  font-size: -webkit-xxx-large;
+  font: 20px sans-serif;
   position: absolute;
-  top: 30px;
-  left: 820px;
+  top: 80px;
+  left: 120px;
 }
