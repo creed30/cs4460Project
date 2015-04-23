@@ -208,7 +208,13 @@ var player = document.getElementById('selectPlayer').value;
 
      });
       showCharts(section1data);
+      tournaments.forEach(function(tournament,index){
+        if(tournaments[index+1] != undefined){
 
+            tournaments[index]['rankup'] = tournaments[index+1]['games'][0]['rank'] - tournaments[index]['games'][0]['rank']
+
+        }
+      })
      dataset = dataset.filter(function(n){ return n != undefined });
      dataset.sort(function(a,b){
   // Turn your strings into dates, and then subtract them
@@ -271,23 +277,42 @@ var player = document.getElementById('selectPlayer').value;
               })
               // .attr("x",(function(d,i) {return i*30;}))
               .text(function(d){return d.name})
+
+
+              arrows = context.selectAll("g")
+              .data(tournaments)
+              .enter()
+              .append('path')
+        .attr('d', d3.svg.symbol().type(function(d){if(d['rankup'] >= 1){return 'triangle-up'} else if (d['rankup'] <= -1){ return 'triangle-down'} else return 'square'}).size(30))
+        .attr('stroke','#000')
+        .attr('stroke-width',1)
+        .attr('fill',function(d){if(d['rankup'] >= 1){return 'green'} else if (d['rankup'] <= -1){ return 'red'} else return 'blue'})
+        .attr('transform',function(d,i){ return "translate("+(margin.left - 10)+","+( i* 20 + 28)+")"; })
+              .on("mouseover", function(d,i){
+                    var recty = i*20 + 22
+                    section2context.selectAll('.section2brushrect').remove();
+                    section2context
+                    .insert("rect",":first-child")
+                    .attr("class", "section2brushrect")
+                    .attr('height',15)
+                    .attr("y",(function() {return recty;}))
+                    .attr('width',width)
+                    .attr('x',margin.left)
+                    .attr('style',function(){
+                     return "fill:rgb(221,221,221)"
+                    })
+
+                  d3.select(".brush").call(brush.extent([d['start'],d['end']]))
+              })
+              .append("svg:title")
+              .text(function(d){return "Rank changed by: " + d['rankup']});
+              // .attr("x",(function(d,i) {return i*30;}))
+
+
                node = context.selectAll("g")
               .data(tournaments)
               .enter()
-              // .append("text")
-              // .attr("y",(function(d,i) {return i* 20 + 20;}))
-              // .attr("x",(function(d,i) {return i*30;}))
-              // .text(function(d){return d.name})
               .append('g')
-              // .attr("y",(function(d,i) {return i*5;}))
-              // .append("text")
-              // .attr('height',12)
-              // .attr('width',width)
-              // // .attr("x",(function(d,i) {return i*30;}))
-              // .attr("y",(function(d,i) {return i* 20 + 20;}))
-              // // .append('text')
-              // .text(function(d){return "<div>" +d.name+ "<div>"})
-
               .on("mouseover", function(d,i){
                     section2context.selectAll('.section2brushrect').remove();
 
@@ -308,48 +333,13 @@ var player = document.getElementById('selectPlayer').value;
 
                   d3.select(".brush").call(brush.extent([new Date(d['start']),new Date(d['end'])]))
               })
-
-              // .append("rect")
-              // .attr("y",(function(d,i) {return i* 20 + 20;}))
-              // .attr("x",60)
-              // .text(function(d){return d.name})
-              // .append("text")
-              // .text(function(d){return d.name})
-              // .enter()
               .append('svg')
-              // .append('rect')
-              // .attr('height',12)
-              // .attr('width',80)
-              // // .attr('x',function(d,i){return i*82})
-              // .attr('style',function(d){
-              //       return "fill:rgb(0,0,0)"
-              //   })
-
-
-              // .attr("y",(function(d,i) {return i* 20;}))
-              // .append("text")
-              // .attr('height',12)
-              // .attr('width',width)
               .attr("x",200 + margin.right)
               .attr("y",(function(d,i) {return i* 20+22;}))
-              // .text(function(d){return d.name})
 
-              // .append('tournament')
-              // .text(function(d){
-              //   ret = d.name + "         ";
-              //   return ret;
-              // });
-              // node.append("text").text(function(d){return "<div>" +d.name+ "<div>"});
               game = node.selectAll("svg").data(function(d){return d['games']}).enter()
               .append('g')
               .attr("transform", function(d,i){ return "translate(" + i*82 + "," + 0 + ")"})
-              // .append('rect')
-              // .attr('height',12)
-              // .attr('width',80)
-              // .attr('x',function(d,i){return i*82})
-              // .attr('style',function(d){
-              //       return "fill:rgb(0,0,0)"
-              //   })
 
               test = game.append('rect')
               .attr('height',12)
