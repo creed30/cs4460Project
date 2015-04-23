@@ -1,68 +1,213 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta http-equiv="Content-type" content="text/html; charset=utf-8">
-        <title>CS 4460</title>
-<!--        <link rel="stylesheet" type="text/css" href="/css/index.css" media="screen"/>-->
-        <!--Loading D3-->
-    <!--    <script type="text/javascript" src="http://mbostock.github.com/d3/d3.js?2.1.3"></script>-->
-        <!--Loading additional libraries-->
-    <!--    <script type="text/javascript" src="node_modules/sql.js/js/sql.js"></script>-->
-        <script type="text/javascript" src="node_modules/d3/d3.js"></script>
-    <!--    <script type="text/javascript" src="DBConnect.js"></script>-->
-    <!--    <script type="text/javascript" src="section1.js"></script>-->
-    </head>    
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>CS4460 Project</title>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.js"></script>
+    <script type="text/javascript" src="http://d3js.org/d3.v3.js"></script>
+    <script type="text/javascript" src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
+    <script type="text/javascript" src="LoadValues.js"></script>
+    <script type="text/javascript" src="section1.js"></script>
+    <script type="text/javascript" src="section2csv.js"></script>
+    <script type="text/javascript" src="section3csv.js"></script>
+    <link rel="stylesheet" href="css/jquery-ui/jquery-ui.css">
+    <script src="css/jquery-ui/jquery-ui.js"></script>
+  <script>
+  //combobox adapted from http://jqueryui.com/autocomplete/#combobox  -  90% of source used.
+  (function( $ ) {
+    $.widget( "custom.combobox", {
+      _create: function() {
+        this.wrapper = $( "<span>" )
+          .addClass( "custom-combobox" )
+          .insertAfter( this.element );
 
-<body>
-<!--
-    <select id="selectYear" onChange="selectPlayers();">
-        <option>SelectYear</option>
+        this.element.hide();
+        this._createAutocomplete();
+        this._createShowAllButton();
+      },
+
+      _createAutocomplete: function() {
+        var selected = this.element.children( ":selected" ),
+          value = selected.val() ? selected.text() : "";
+
+        this.input = $( "<input>" )
+          .appendTo( this.wrapper )
+          .val( value )
+          .attr( "title", "" )
+          .addClass( "custom-combobox-input ui-widget ui-widget-content ui-state-default ui-corner-left" )
+          .autocomplete({
+            delay: 0,
+            minLength: 0,
+            source: $.proxy( this, "_source" )
+          })
+          .tooltip({
+            tooltipClass: "ui-state-highlight"
+          });
+
+        this._on( this.input, {
+          autocompleteselect: function( event, ui ) {
+            ui.item.option.selected = true;
+            this._trigger( "select", event, {
+              item: ui.item.option
+            });
+          },
+
+          autocompletechange: "_removeIfInvalid"
+        });
+      },
+
+      _createShowAllButton: function() {
+        var input = this.input,
+          wasOpen = false;
+
+        $( "<a>" )
+          .attr( "tabIndex", -1 )
+          .attr( "title", "Show All Items" )
+          .tooltip()
+          .appendTo( this.wrapper )
+          .button({
+            icons: {
+              primary: "ui-icon-triangle-1-s"
+            },
+            text: false
+          })
+          .removeClass( "ui-corner-all" )
+          .addClass( "custom-combobox-toggle ui-corner-right" )
+          .mousedown(function() {
+            wasOpen = input.autocomplete( "widget" ).is( ":visible" );
+          })
+          .click(function() {
+            input.focus();
+
+            // Close if already visible
+            if ( wasOpen ) {
+              return;
+            }
+
+            // Pass empty string as value to search for, displaying all results
+            input.autocomplete( "search", "" );
+          });
+      },
+
+      _source: function( request, response ) {
+        var matcher = new RegExp( $.ui.autocomplete.escapeRegex(request.term), "i" );
+        response( this.element.children( "option" ).map(function() {
+          var text = $( this ).text();
+          if ( this.value && ( !request.term || matcher.test(text) ) )
+            return {
+              label: text,
+              value: text,
+              option: this
+            };
+        }) );
+      },
+
+      _removeIfInvalid: function( event, ui ) {
+
+        // Selected an item, nothing to do
+        if ( ui.item ) {
+          return;
+        }
+
+        // Search for a match (case-insensitive)
+        var value = this.input.val(),
+          valueLowerCase = value.toLowerCase(),
+          valid = false;
+        this.element.children( "option" ).each(function() {
+          if ( $( this ).text().toLowerCase() === valueLowerCase ) {
+            this.selected = valid = true;
+            return false;
+          }
+        });
+
+        // Found a match, nothing to do
+        if ( valid ) {
+          return;
+        }
+
+        // Remove invalid value
+        this.input
+          .val( "" )
+          .attr( "title", value + " didn't match any item" )
+          .tooltip( "open" );
+        this.element.val( "" );
+        this._delay(function() {
+          this.input.tooltip( "close" ).attr( "title", "" );
+        }, 2500 );
+        this.input.autocomplete( "instance" ).term = "";
+      },
+
+      _destroy: function() {
+        this.wrapper.remove();
+        this.element.show();
+      }
+    });
+  })( jQuery );
+
+  $(function() {
+    $( "#selectPlayer" ).combobox({
+          select: function (event, ui) {
+            $('section1').fadeOut(200);
+            $('section2').fadeOut(200);
+            $('section3').fadeOut(200);
+            setTimeout(function(){section1();section2();section3()},200);
+            setTimeout(function(){$('section1').fadeIn('400');
+            $('section2').fadeIn('400');
+            $('section3').fadeIn('400');},300)
+          }
+      });
+    $( "#toggle" ).click(function() {
+      $( "#selectPlayer" ).toggle();
+    });
+
+    $( "#selectYear" ).combobox({
+          select: function (event, ui) {
+            loadPlayers();
+          }
+      });
+    $( "#toggle" ).click(function() {
+      $( "#selectYear" ).toggle();
+    });
+
+  });
+  </script>
+    <link rel="stylesheet" type="text/css" href="/css/index.css" media="screen" />
+</head>
+
+<body onload="$('section1').fadeOut('slow');
+    $('section2').fadeOut('slow');
+    $('section3').fadeOut(1);loadYear();section2init();">
+  <div id="title">
+    <span>Tennis Player Performance</span>
+  </div>
+  <div id="selection">
+    <select id="selectYear" onChange="loadPlayers();">
+        <option id="SelectYear">SelectYear</option>
     </select>
-
-    <select id="selectPlayer">
-        <option>SelectPlayer</option>
+    <dropdownbuffer>
+    <select id="selectPlayer" onChange="$('section1').fadeOut(200);
+    $('section2').fadeOut(200);
+    $('section3').fadeOut(200);
+    setTimeout(function(){section1();section2();section3()},200);
+    setTimeout(function(){$('section1').fadeIn('400');
+    $('section2').fadeIn('400');
+    $('section3').fadeIn('400');},300)">
+        <option id="0">SelectPlayer</option>
     </select>
+  </dropdownbuffer>
 
-    <button type="button" onclick="selectWRank('Federer R.',2010);">
-        Click me to display selectWRank
-    </button>
-    
-    <button type="button" onclick="selectPlayers(2010);">
-        Click me to display selectPlayers
-    </button>
-    
-    <button type="button" onclick="go()">
-        Click me to display Graph
-    </button>
-    
-    <button type="button" onclick="selectWLRank('Dosedel S.')">
-        Click me to display selectWLRank
-    </button>
--->
-    
-    <button type="button" onclick="showCharts()">
-        show charts
-    </button>
-    
-    <div id="pie"/>
-    <script type="text/javascript" src="piecharts.js"></script>
-<!--
-    <div class="invis">
-        <p id="demoWRank"/>
-    </div>
-    
-    <div class="invis">
-        <p id="players"/>
-    </div>
-    
-    <p id="demoWRankDates"/>
-    <p id="demoLRank"/>
-    <p id="demoWLRank"/>
-    <p id="section1"/>
-    <p id="section2"/>
-    
-    <div id="section3"/>
-    <script type="text/javascript" src="section3.js"/>
--->
+  </div>
+  <piechartbuffer>
+    <section1>
+    </section1>
+  </piechartbuffer>
+  <br></br>
+  <br></br>
+  <br></br>
+  <br></br>
+  <section2>
+  </section2>
+  <section3>
+  </section3>
 </body>
 </html>
