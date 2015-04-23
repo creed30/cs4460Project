@@ -262,7 +262,7 @@ section1data[2][1] = 0;
         .attr('d', d3.svg.symbol().type(function(d){if(d['rankup'] >= 1){return 'triangle-up'} else if (d['rankup'] <= -1){ return 'triangle-down'} else return 'square'}).size(30))
         .attr('stroke','#000')
         .attr('stroke-width',1)
-        .attr('fill',function(d){if(d['rankup'] >= 1){return 'green'} else if (d['rankup'] <= -1){ return 'red'} else return 'blue'})
+        .attr('fill',function(d){if(d['rankup'] >= 1){return 'red'} else if (d['rankup'] <= -1){ return 'green'} else return 'blue'})
         .attr('transform',function(d,i){ return "translate("+(margin.left - 10)+","+( i* 20 + 28)+")"; })
               .on("mouseover", section2mouseover)
               .append("svg:title")
