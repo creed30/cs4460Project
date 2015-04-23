@@ -61,9 +61,9 @@ function showCharts(data) {
   // Insert an svg:svg element (with margin) for each row in our dataset. A
   // child svg:g element translates the origin to the pie center.
   var svg = d3.select("section1").append("svg")
-      .attr("width", 1000)
+      .attr("width", 360)
       .attr("heigth", 200)
-      .attr("x", 500)
+      // .attr("x", 500)
       .selectAll("svg")
       .data(fakedat)
       .enter().append("svg:svg")
@@ -71,7 +71,7 @@ function showCharts(data) {
       .attr("width", (r + m) * 2)
       .attr("height", (r + m) * 2)
       .attr("x", function (d, i) {
-          return 400 + i*120;
+          return i*120;
       })
       .append("svg:g")
       .attr("transform", "translate(" + (r + m) + "," + (r + m) + ")");

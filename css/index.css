@@ -135,3 +135,9 @@ section1 .mouseover {
   top: 80px;
   left: 120px;
 }
+
+section1 {
+  position: absolute;
+  top: 0px;
+  left: 400px;
+}
