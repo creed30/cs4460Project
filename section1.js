@@ -33,6 +33,8 @@ function showCharts(data) {
   var totalHardGames = data[1][0] + data[1][1];
   var totalClayGames = data[2][0] + data[2][1];
 
+
+  // Create fake data to be used in the initial transition
   var fakedat = [];
   fakedat[0] = [];
   fakedat[1] = [];
@@ -115,15 +117,16 @@ function showCharts(data) {
                   })
                   .each(function(d) { this._current = d; });
 
-  // store the initial values
-  // svg.data(fakedat)
+
   var timeout = setTimeout(function () {
     clearTimeout(timeout);
+    // Load the real data
     var count = 0;
     svg.data(data);
     root.data(pie);
-    path = path.data(function(d){return pie(d)}); // update the data
+    path = path.data(function(d){return pie(d)}); 
 
+    // Initial code for transition from: http://codepen.io/tpalmer/pen/jqlFG/
     path.transition().duration(1000).attrTween("d", function (a) {
       if (this.progress === undefined) {
         this.progress = 0;
@@ -151,6 +154,7 @@ function showCharts(data) {
       var i2 = d3.interpolate(this.progress, wins/totalGames);
       this._current = i(0);
       return function(t) {
+        // A fix to avoid a d3 javascript error. Doesn't really break anything, but errors logged to console are no bueno
         if(arc(i(t)).indexOf("NaN") > -1){
           return "M-9.184850993605149e-15,-50A50,50 0 0,0 -0.0006543488698345634,-49.99999999571828L-0.0003271744349172817,-24.99999999785914A25,25 0 0,1 -4.592425496802574e-15,-25Z"
         }
@@ -160,10 +164,12 @@ function showCharts(data) {
     });
 
     cnt = 0;
+    // Create the graph
     svg.selectAll(".arc")
         .append("text")
         .attr("text-anchor", "middle")
         .attr("transform", function (d) {
+          // More d3 NaN error fixing
           if( isNaN(d['endAngle']) || isNaN(d['startAngle']) ){
             return "";
           }
