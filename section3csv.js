@@ -164,6 +164,7 @@ function section3() {
 function brushed() {
   var e = brush.extent();
     section2context.selectAll('.section2brushrect').remove();
+    // Idea taken from http://bl.ocks.org/mbostock/4063663 and modified
   svg.selectAll("rect").classed("hidden", function(d) {
     section2Brush(e[0],e[1])
   });

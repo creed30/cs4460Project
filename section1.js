@@ -11,9 +11,7 @@ var color = {
 }
 
 function section1() {
-  var player = document.getElementById('selectPlayer').value;
-  var year = document.getElementById('selectYear').value;
-  getStats(player, year);
+// Does nothing anymore! Deprecated to the extremeeee
 }
 
 /**
@@ -141,7 +139,8 @@ function showCharts(data) {
     root.data(pie);
     path = path.data(function(d){return pie(d)}); 
 
-    // Initial code for transition from: http://codepen.io/tpalmer/pen/jqlFG/
+    // Initial code for transition from: http://codepen.io/tpalmer/pen/jqlFG/ 
+    // Has been modified for our purposes
     path.transition().duration(1000).attrTween("d", function (a) {
       if (this.progress === undefined) {
         this.progress = 0;
@@ -263,12 +262,6 @@ function showCharts(data) {
       });
 }
 
-function getStats(player, year) {
-  var params = {
-    'player': player,
-    'year': year
-  };
-}
 
 function calculatePercentage(games, totalGames) {
   return (games/totalGames*100).toFixed(2)  + "%";
