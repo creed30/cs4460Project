@@ -181,7 +181,8 @@ section1data[2][1] = 0;
           // end:addDays(ret[0],1),
           end:new Date(ret[0]),
           name:ret[5],
-          games:[game]
+          games:[game],
+          surface:d['Surface']
         }
 
         tournament['end'] = addDays(tournament['end'],-1);
@@ -364,3 +365,5 @@ function section2mouseover(d,i){
 
                   d3.select(".brush").call(brush.extent([d['start'],d['end']]))
 }
+
+

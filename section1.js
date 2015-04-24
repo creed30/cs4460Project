@@ -76,6 +76,17 @@ function showCharts(data) {
           return i*120;
       })
       .append("svg:g")
+      .on("mouseover", function(d,i){
+                    if (i == 0 ) {
+                      section2fieldtypebrush('Grass')
+                    } else if (i == 1) {
+                      section2fieldtypebrush('Hard')
+                    } else if (i == 2) {
+                      section2fieldtypebrush('Clay')
+                    } else {
+
+                    }
+      })            
       .attr("transform", "translate(" + (r + m) + "," + (r + m) + ")");
 
       // d3.select("section1").append("svg:line")
@@ -95,7 +106,7 @@ function showCharts(data) {
   root = svg.selectAll("path")
             .data(pie)
             .enter().append("svg:g")
-            .attr("class", "arc");
+            .attr("class", "arc")
 
 
   var path = root.append("svg:path")
@@ -103,11 +114,14 @@ function showCharts(data) {
                   // .data(pie([0,100]))
                   .attr("d", arc)
                   .style("fill", function (d, i) {
+
+
                     this.dat = d;
                     cnt++;
                     if (cnt == 0) {
                       return color.GRASS;
                     } else if (cnt == 2) {
+
                       return color.HARD;
                     } else if (cnt == 4) {
                       return color.CLAY;
@@ -115,7 +129,8 @@ function showCharts(data) {
                       return color.WHITE;
                     }
                   })
-                  .each(function(d) { this._current = d; });
+                  .each(function(d) { 
+                    this._current = d; });
 
 
   var timeout = setTimeout(function () {
@@ -257,4 +272,25 @@ function getStats(player, year) {
 
 function calculatePercentage(games, totalGames) {
   return (games/totalGames*100).toFixed(2)  + "%";
+}
+
+function section2fieldtypebrush(surface){
+    section2context.selectAll('.section2brushrect').remove();
+
+    section2context.selectAll('.section2context')
+    .data(tournaments)
+    .enter()
+    .insert("rect",":first-child")
+    .attr("class", "section2brushrect")
+    .attr('height',15)
+    .attr("y",(function(d,i) {return i* 20 + 20;}))
+    .attr('width',width)
+    .attr('x',margin.left)
+    .attr('style',function(d){
+      if(d['surface'] == surface){
+        return "fill:rgb(221,221,221)"
+      }
+      else
+        this.remove();
+  })
 }
